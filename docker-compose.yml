@@ -1,0 +1,42 @@
+# docker-compose.yml — Infraestructura de desarrollo local
+# Levanta solo los servicios de infraestructura (DB + Redis)
+# El backend y frontend corren con `npm run dev` directamente
+
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: scrumforge-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: scrumforge
+      POSTGRES_USER: scrumforge
+      POSTGRES_PASSWORD: scrumforge123
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U scrumforge']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: scrumforge-redis
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  redis_data:

@@ -1,0 +1,68 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "@scrumforge/frontend-sdk": [
+        "../packages/frontend-sdk/src/index.ts"
+      ],
+      "react": [
+        "./node_modules/@types/react"
+      ],
+      "@scrumforge/frontend-ext-planning-poker": [
+        "../../scrumforge-extensions/packages/frontend-ext-planning-poker/src/index.ts"
+      ],
+      "@scrumforge/frontend-ext-ai": [
+        "../../scrumforge-extensions/packages/frontend-ext-ai/src/index.ts"
+      ],
+      "@scrumforge/frontend-ext-advanced-reports": [
+        "../../scrumforge-extensions/packages/frontend-ext-advanced-reports/src/index.ts"
+      ],
+      "@scrumforge/frontend-ext-retrospective-premium": [
+        "../../scrumforge-extensions/packages/frontend-ext-retrospective-premium/src/index.ts"
+      ],
+      "@scrumforge/frontend-ext-billing-stripe": [
+        "../../scrumforge-extensions/packages/frontend-ext-billing-stripe/src/index.ts"
+      ],
+      "@scrumforge/frontend-ext-integrations": [
+        "../../scrumforge-extensions/packages/frontend-ext-integrations/src/index.ts"
+      ],
+      "@scrumforge/frontend-ext-wiki": [
+        "../../scrumforge-extensions/packages/frontend-ext-wiki/src/index.ts"
+      ]
+    },
+    "types": [
+      "vitest/globals",
+      "@testing-library/jest-dom"
+    ]
+  },
+  "include": [
+    "src"
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
+}

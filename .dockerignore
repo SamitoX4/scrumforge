@@ -1,0 +1,33 @@
+# ── Node modules (rebuilt inside Docker) ──────────────────────────────────────
+**/node_modules
+
+# ── Build outputs (rebuilt inside Docker) ─────────────────────────────────────
+backend/dist
+frontend/dist
+# Note: packages/backend-sdk/dist is intentionally included (production shim)
+
+# ── Environment files ─────────────────────────────────────────────────────────
+**/.env
+**/.env.*
+!**/.env.example
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+**/*.log
+**/npm-debug.log*
+
+# ── VCS ───────────────────────────────────────────────────────────────────────
+.git
+.gitignore
+
+# ── Docs (not needed in Docker image) ─────────────────────────────────────────
+AGENTS.md
+AVANCES.md
+CLAUDE.md
+SETUP.md
+README.md
+
+# ── Test files ────────────────────────────────────────────────────────────────
+**/*.test.ts
+**/*.spec.ts
+**/coverage
+**/__tests__
