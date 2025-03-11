@@ -1,0 +1,88 @@
+# backend/docker-compose.yml — Backend + infraestructura como stack independiente
+#
+# Úsalo cuando el backend corre en un servidor separado del frontend.
+# IMPORTANTE: ejecutar siempre desde la raíz del repositorio (ScrumForge/).
+#
+# Uso:
+#   cd ScrumForge/
+#   docker compose -f backend/docker-compose.yml up -d
+#
+# Variables de entorno requeridas (crear backend/.env o definir en el entorno):
+#   DATABASE_URL, JWT_SECRET
+#   Ver backend/.env.example para la lista completa.
+
+services:
+  # ── Infraestructura ──────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: scrumforge-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-scrumforge}
+      POSTGRES_USER: ${POSTGRES_USER:-scrumforge}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-scrumforge}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - internal
+
+  redis:
+    image: redis:7-alpine
+    container_name: scrumforge-redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - internal
+
+  # ── Backend ──────────────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ..                      # raíz del repositorio (ScrumForge/)
+      dockerfile: backend/Dockerfile
+    container_name: scrumforge-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env                 # relativo a la raíz del repo
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-scrumforge}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-scrumforge}
+      REDIS_URL: redis://redis:6379
+    ports:
+      - '4000:4000'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://localhost:4000/health || exit 1']
+      interval: 30s
+      timeout: 10s
+      start_period: 30s
+      retries: 3
+    networks:
+      - internal
+      - public
+
+networks:
+  internal:
+    driver: bridge
+    internal: true
+  public:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:

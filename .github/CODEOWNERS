@@ -1,0 +1,8 @@
+# Default reviewers for all files
+* @scrumforge-team
+
+# Backend
+/backend/ @scrumforge-backend
+
+# Frontend
+/frontend/ @scrumforge-frontend
