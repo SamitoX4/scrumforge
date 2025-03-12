@@ -1,0 +1,519 @@
+// ScrumForge — Prisma Schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── AUTH & USERS ─────────────────────────────────────────────────────────────
+
+model User {
+  id               String    @id @default(cuid())
+  email            String    @unique
+  name             String
+  password         String
+  avatarUrl        String?
+  emailVerifiedAt  DateTime?
+  loginAttempts    Int       @default(0)
+  loginLockedUntil DateTime?
+  locale           String    @default("es")
+  termsAcceptedAt  DateTime?
+  termsVersion     String?
+  anthropicApiKey  String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  ownedWorkspaces          Workspace[]               @relation("WorkspaceOwner")
+  teamMemberships          TeamMember[]
+  assignedStories          UserStory[]               @relation("StoryAssignee")
+  assignedTasks            Task[]                    @relation("TaskAssignee")
+  comments                 Comment[]
+  notifications            Notification[]
+  refreshTokens            RefreshToken[]
+  emailVerificationTokens  EmailVerificationToken[]
+  passwordResetTokens      PasswordResetToken[]
+  oauthAccounts            OAuthAccount[]
+  reportedImpediments      Impediment[]              @relation("ImpedimentReporter")
+  assignedImpediments      Impediment[]              @relation("ImpedimentAssignee")
+  resolvedImpediments      Impediment[]              @relation("ImpedimentResolver")
+  auditLogs                AuditLog[]
+  pokerVotes               PokerVote[]
+  createdDependencies      StoryDependency[]
+  retroCards               RetroCard[]           @relation("RetroCardAuthor")
+  retroActions             RetroAction[]         @relation("RetroActionAssignee")
+  createdWikiPages         WikiPage[]            @relation("WikiPageAuthor")
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ─── WORKSPACE & TEAMS ────────────────────────────────────────────────────────
+
+model Workspace {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  ownerId   String
+  locale    String   @default("es")
+  settings  String   @default("{}") // JSON serialized
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  owner        User                @relation("WorkspaceOwner", fields: [ownerId], references: [id])
+  teams        Team[]
+  subscription Subscription?
+  invitations  WorkspaceInvitation[]
+  webhooks     Webhook[]
+}
+
+model Team {
+  id          String   @id @default(cuid())
+  name        String
+  workspaceId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace Workspace   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  members   TeamMember[]
+  projects  Project[]
+}
+
+model TeamMember {
+  id       String   @id @default(cuid())
+  userId   String
+  teamId   String
+  role     String   @default("DEVELOPER") // PRODUCT_OWNER | SCRUM_MASTER | DEVELOPER | STAKEHOLDER
+  joinedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, teamId])
+}
+
+// ─── PROJECTS ─────────────────────────────────────────────────────────────────
+
+model Project {
+  id        String   @id @default(cuid())
+  name      String
+  key       String   // e.g. "SF" — issue keys will be SF-1, SF-2 ...
+  teamId    String
+  settings  String   @default("{}") // JSON serialized
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  team            Team            @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  epics           Epic[]
+  userStories     UserStory[]
+  sprints         Sprint[]
+  impediments     Impediment[]
+  dodItems        DodItem[]
+  auditLogs       AuditLog[]
+  pokerSessions   PokerSession[]
+  retrospectives  Retrospective[]
+  wikiPages       WikiPage[]
+
+  @@unique([teamId, key])
+}
+
+// ─── BACKLOG ──────────────────────────────────────────────────────────────────
+
+model Epic {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  projectId   String
+  priority    String   @default("MEDIUM") // CRITICAL | HIGH | MEDIUM | LOW
+  color       String   @default("#3B82F6")
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project     Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userStories UserStory[]
+}
+
+model UserStory {
+  id            String    @id @default(cuid())
+  title         String
+  description   String?
+  epicId        String?
+  projectId     String
+  sprintId      String?
+  status        String    @default("TODO") // TODO | IN_PROGRESS | IN_REVIEW | DONE
+  points        Int?
+  priority      String    @default("MEDIUM")
+  assigneeId    String?
+  order         Int       @default(0)
+  isBlocked     Boolean   @default(false)
+  blockedReason String?
+  customFields  Json?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  epic              Epic?             @relation(fields: [epicId], references: [id], onDelete: SetNull)
+  project           Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  sprint            Sprint?           @relation(fields: [sprintId], references: [id], onDelete: SetNull)
+  assignee          User?             @relation("StoryAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  tasks             Task[]
+  comments          Comment[]         @relation("StoryComments")
+  attachments       Attachment[]      @relation("StoryAttachments")
+  dependenciesFrom  StoryDependency[] @relation("DependencyFrom")
+  dependenciesTo    StoryDependency[] @relation("DependencyTo")
+}
+
+model Task {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  userStoryId String
+  status      String    @default("TODO")
+  assigneeId  String?
+  dueDate     DateTime?
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  userStory   UserStory    @relation(fields: [userStoryId], references: [id], onDelete: Cascade)
+  assignee    User?        @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  comments    Comment[]    @relation("TaskComments")
+  attachments Attachment[] @relation("TaskAttachments")
+}
+
+// ─── SPRINTS ──────────────────────────────────────────────────────────────────
+
+model Sprint {
+  id            String    @id @default(cuid())
+  name          String
+  goal          String?
+  projectId     String
+  startDate     DateTime?
+  endDate       DateTime?
+  status        String    @default("PLANNING") // PLANNING | ACTIVE | COMPLETED
+  plannedPoints Int       @default(0) // captured at close time before stories are moved
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  project     Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userStories UserStory[]
+  impediments Impediment[]
+}
+
+// ─── COLLABORATION ────────────────────────────────────────────────────────────
+
+model Comment {
+  id          String   @id @default(cuid())
+  body        String
+  authorId    String
+  userStoryId String?
+  taskId      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  userStory UserStory? @relation("StoryComments", fields: [userStoryId], references: [id], onDelete: Cascade)
+  task      Task?      @relation("TaskComments", fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+model Attachment {
+  id          String   @id @default(cuid())
+  url         String
+  filename    String
+  userStoryId String?
+  taskId      String?
+  createdAt   DateTime @default(now())
+
+  userStory UserStory? @relation("StoryAttachments", fields: [userStoryId], references: [id], onDelete: Cascade)
+  task      Task?      @relation("TaskAttachments", fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  type      String    // MENTION | ASSIGNMENT | SPRINT_START | SPRINT_END | etc.
+  payload   String    @default("{}") // JSON
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ─── SAAS FOUNDATION ──────────────────────────────────────────────────────────
+
+model EmailVerificationToken {
+  id        String    @id @default(cuid())
+  userId    String
+  token     String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  token     String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model OAuthAccount {
+  id                String   @id @default(cuid())
+  userId            String
+  provider          String
+  providerAccountId String
+  createdAt         DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Plan {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  limits    Json
+  createdAt DateTime @default(now())
+
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id                   String    @id @default(cuid())
+  workspaceId          String    @unique
+  planId               String
+  status               String    // ACTIVE | TRIALING | PAST_DUE | CANCELED
+  currentPeriodEnd     DateTime?
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  plan      Plan      @relation(fields: [planId], references: [id])
+}
+
+model WorkspaceInvitation {
+  id          String    @id @default(cuid())
+  workspaceId String
+  email       String
+  role        String
+  token       String    @unique
+  expiresAt   DateTime
+  acceptedAt  DateTime?
+  createdAt   DateTime  @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ─── RETROSPECTIVE ────────────────────────────────────────────────────────────
+
+model Retrospective {
+  id          String   @id @default(cuid())
+  projectId   String
+  sprintId    String?
+  title       String
+  template    String   @default("START_STOP_CONTINUE") // START_STOP_CONTINUE | GLAD_SAD_MAD | FOUR_LS | SAILBOAT | CUSTOM
+  status      String   @default("OPEN") // OPEN | VOTING | CLOSED
+  createdById String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  cards   RetroCard[]
+  actions RetroAction[]
+}
+
+model RetroCard {
+  id             String   @id @default(cuid())
+  retroId        String
+  column         String   // e.g. "Start", "Stop", "Continue", "Glad", etc.
+  body           String
+  authorId       String
+  votes          Int      @default(0)
+  createdAt      DateTime @default(now())
+
+  retro  Retrospective @relation(fields: [retroId], references: [id], onDelete: Cascade)
+  author User          @relation("RetroCardAuthor", fields: [authorId], references: [id])
+}
+
+model RetroAction {
+  id           String    @id @default(cuid())
+  retroId      String
+  title        String
+  assignedToId String?
+  dueDate      DateTime?
+  done         Boolean   @default(false)
+  storyId      String?   // if converted to backlog story
+  createdAt    DateTime  @default(now())
+
+  retro      Retrospective @relation(fields: [retroId], references: [id], onDelete: Cascade)
+  assignedTo User?         @relation("RetroActionAssignee", fields: [assignedToId], references: [id])
+}
+
+// ─── DEPENDENCIES ─────────────────────────────────────────────────────────────
+
+model StoryDependency {
+  id             String   @id @default(cuid())
+  fromStoryId    String   // the story that has the dependency
+  toStoryId      String   // the story it depends on / blocks
+  type           String   // BLOCKS | BLOCKED_BY | RELATED
+  createdById    String
+  createdAt      DateTime @default(now())
+
+  fromStory  UserStory @relation("DependencyFrom", fields: [fromStoryId], references: [id], onDelete: Cascade)
+  toStory    UserStory @relation("DependencyTo", fields: [toStoryId], references: [id], onDelete: Cascade)
+  createdBy  User      @relation(fields: [createdById], references: [id])
+
+  @@unique([fromStoryId, toStoryId, type])
+}
+
+// ─── PLANNING POKER ───────────────────────────────────────────────────────────
+
+model PokerSession {
+  id         String    @id @default(cuid())
+  projectId  String
+  storyId    String
+  status     String    @default("VOTING") // VOTING | REVEALED | CLOSED
+  scale      String    @default("FIBONACCI") // FIBONACCI | TSHIRT | CUSTOM
+  createdById String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  project    Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  votes      PokerVote[]
+}
+
+model PokerVote {
+  id        String   @id @default(cuid())
+  sessionId String
+  userId    String
+  value     String   // e.g. "5", "M", "?"
+  createdAt DateTime @default(now())
+
+  session PokerSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user    User         @relation(fields: [userId], references: [id])
+
+  @@unique([sessionId, userId])
+}
+
+// ─── AUDIT LOG ────────────────────────────────────────────────────────────────
+
+model AuditLog {
+  id            String   @id @default(cuid())
+  entityType    String   // UserStory | Task | Sprint | Epic
+  entityId      String
+  action        String   // STATUS_CHANGED | FIELD_UPDATED | CREATED | DELETED | ASSIGNED
+  field         String?  // which field changed (null for CREATE/DELETE)
+  oldValue      String?
+  newValue      String?
+  userId        String
+  projectId     String
+  createdAt     DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([entityId, entityType])
+  @@index([projectId, createdAt])
+}
+
+// ─── DEFINITION OF DONE ───────────────────────────────────────────────────────
+
+model DodItem {
+  id        String   @id @default(cuid())
+  text      String
+  projectId String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+// ─── IMPEDIMENTS ──────────────────────────────────────────────────────────────
+
+model Impediment {
+  id              String    @id @default(cuid())
+  title           String
+  description     String?
+  category        String    @default("OTHER") // TECHNICAL | EXTERNAL | ORGANIZATIONAL | OTHER
+  impact          String    @default("MEDIUM") // HIGH | MEDIUM | LOW
+  status          String    @default("OPEN") // OPEN | IN_PROGRESS | RESOLVED
+  projectId       String
+  sprintId        String?
+  reportedById    String
+  assignedToId    String?
+  resolvedById    String?
+  resolvedComment String?
+  escalatedAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  project    Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  sprint     Sprint? @relation(fields: [sprintId], references: [id], onDelete: SetNull)
+  reportedBy User    @relation("ImpedimentReporter", fields: [reportedById], references: [id])
+  assignedTo User?   @relation("ImpedimentAssignee", fields: [assignedToId], references: [id])
+  resolvedBy User?   @relation("ImpedimentResolver", fields: [resolvedById], references: [id])
+}
+
+// ─── INTEGRATIONS ─────────────────────────────────────────────────────────────
+
+model Webhook {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  url         String
+  events      String[]
+  secret      String    @default("")
+  active      Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+// ─── EVENT SOURCING ───────────────────────────────────────────────────────────
+
+model Event {
+  id            String   @id @default(cuid())
+  type          String   // STORY_CREATED | SPRINT_STARTED | TASK_MOVED | etc.
+  aggregateId   String
+  aggregateType String   // UserStory | Sprint | Task | etc.
+  payload       String   @default("{}") // JSON
+  userId        String?
+  createdAt     DateTime @default(now())
+
+  @@index([aggregateId, aggregateType])
+  @@index([createdAt])
+}
+
+// ─── WIKI (premium extension) ─────────────────────────────────────────────────
+// Model lives in the core schema because WikiPage.projectId → Project.id (FK).
+// The business logic lives entirely in extensions/wiki/.
+
+model WikiPage {
+  id          String   @id @default(cuid())
+  projectId   String
+  title       String
+  slug        String   // URL-friendly, unique within project
+  content     String   @default("") // Markdown
+  createdById String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdBy User    @relation("WikiPageAuthor", fields: [createdById], references: [id])
+
+  @@unique([projectId, slug])
+  @@index([projectId, updatedAt])
+}
