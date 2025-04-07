@@ -1,0 +1,84 @@
+@use 'variables' as *;
+@use 'reset';
+
+// Import Inter font
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+// ─── Theme tokens ──────────────────────────────────────────────────────────────
+:root {
+  // Semantic aliases (kept for compatibility)
+  --bg-primary:   #ffffff;
+  --bg-secondary: #F8FAFC;
+  --text-primary: #1E293B;
+  --text-secondary: #64748B;
+  --border-color: #E2E8F0;
+  --card-bg:      #ffffff;
+
+  // Full gray palette (used by SCSS variables)
+  --color-white:        #FFFFFF;
+  --color-gray-50:      #F8FAFC;
+  --color-gray-100:     #F1F5F9;
+  --color-gray-200:     #E2E8F0;
+  --color-gray-300:     #CBD5E1;
+  --color-gray-400:     #94A3B8;
+  --color-gray-500:     #64748B;
+  --color-gray-600:     #475569;
+  --color-gray-700:     #334155;
+  --color-gray-800:     #1E293B;
+  --color-gray-900:     #0F172A;
+  --color-primary-light:#EFF6FF;
+
+  // Shadows
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="dark"] {
+  --bg-primary:   #0F172A;
+  --bg-secondary: #1E293B;
+  --text-primary: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --border-color: #334155;
+  --card-bg:      #1E293B;
+
+  // Inverted gray palette: lightest ↔ darkest for surfaces/text
+  --color-white:        #1E293B;
+  --color-gray-50:      #0F172A;
+  --color-gray-100:     #1E293B;
+  --color-gray-200:     #334155;
+  --color-gray-300:     #475569;
+  --color-gray-400:     #64748B;
+  --color-gray-500:     #94A3B8;
+  --color-gray-600:     #CBD5E1;
+  --color-gray-700:     #E2E8F0;
+  --color-gray-800:     #F1F5F9;
+  --color-gray-900:     #F8FAFC;
+  --color-primary-light:#1e3a5f;
+
+  // Softer shadows on dark backgrounds
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+// ─── Utility classes ──────────────────────────────────────────────────────────
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
