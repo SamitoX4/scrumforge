@@ -1,0 +1,103 @@
+@use '@/styles/variables' as *;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+}
+
+.header { display: flex; flex-direction: column; gap: $spacing-2; }
+
+.title {
+  font-size: $font-size-2xl;
+  font-weight: 700;
+  color: $color-gray-900;
+  letter-spacing: -0.02em;
+}
+
+.subtitle { font-size: $font-size-md; color: $color-gray-500; }
+
+.fields { display: flex; flex-direction: column; gap: $spacing-4; }
+
+.errorBox {
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  color: $color-danger;
+  padding: $spacing-3 $spacing-4;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+}
+
+.footer {
+  text-align: center;
+  font-size: $font-size-sm;
+  color: $color-gray-500;
+}
+
+.link {
+  color: $color-primary;
+  font-weight: 500;
+  &:hover { text-decoration: underline; }
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  color: $color-gray-400;
+  font-size: $font-size-xs;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: $color-gray-200;
+  }
+}
+
+.googleBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-2;
+  width: 100%;
+  padding: $spacing-3 $spacing-4;
+  background: $color-white;
+  border: 1px solid $color-gray-300;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  font-weight: 500;
+  color: $color-gray-700;
+  cursor: pointer;
+  transition: background $transition-fast, border-color $transition-fast;
+
+  &:hover {
+    background: $color-gray-50;
+    border-color: $color-gray-400;
+  }
+}
+
+.googleIcon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.demo {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+  padding: $spacing-3;
+  background: $color-gray-50;
+  border-radius: $radius-md;
+  border: 1px dashed $color-gray-200;
+}
+
+.demo__label { font-size: $font-size-xs; color: $color-gray-400; font-weight: 500; }
+
+.demo__code {
+  font-family: monospace;
+  font-size: $font-size-xs;
+  color: $color-gray-600;
+}

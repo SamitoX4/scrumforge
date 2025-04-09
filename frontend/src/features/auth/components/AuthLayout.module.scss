@@ -1,0 +1,37 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.layout {
+  display: grid;
+  grid-template-columns: 480px 1fr;
+  min-height: 100vh;
+
+  @include tablet { grid-template-columns: 1fr; }
+}
+
+.panel {
+  padding: $spacing-12 $spacing-10;
+  background: $color-white;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-8;
+}
+
+.brand {
+  @include flex(row, center, flex-start, $spacing-3);
+}
+
+.brand__icon { font-size: 2rem; }
+
+.brand__name {
+  font-size: $font-size-2xl;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: $color-gray-900;
+}
+
+.illustration {
+  background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 50%, #1D4ED8 100%);
+
+  @include tablet { display: none; }
+}
