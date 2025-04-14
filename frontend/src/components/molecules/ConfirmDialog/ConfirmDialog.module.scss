@@ -1,0 +1,42 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: $z-modal;
+  @include flex-center;
+  padding: $spacing-4;
+}
+
+.dialog {
+  background: $color-white;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-xl;
+  padding: $spacing-8;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+}
+
+.title {
+  font-size: $font-size-lg;
+  font-weight: 700;
+  color: $color-gray-900;
+  margin: 0;
+}
+
+.message {
+  font-size: $font-size-sm;
+  color: $color-gray-600;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.actions {
+  @include flex(row, center, flex-end, $spacing-3);
+  margin-top: $spacing-2;
+}

@@ -1,0 +1,83 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+// ── Standalone banner ─────────────────────────────────────────────────────────
+
+.banner {
+  @include flex(row, center, space-between, $spacing-4);
+  background: linear-gradient(135deg, rgba($color-primary, 0.06) 0%, rgba($color-primary, 0.02) 100%);
+  border: 1px solid rgba($color-primary, 0.2);
+  border-radius: $radius-lg;
+  padding: $spacing-4 $spacing-5;
+}
+
+.bannerContent {
+  @include flex(row, flex-start, flex-start, $spacing-4);
+}
+
+.icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: $font-size-sm;
+  font-weight: 600;
+  color: $color-gray-800;
+  margin: 0 0 $spacing-1;
+  @include flex(row, center, flex-start, $spacing-2);
+  flex-wrap: wrap;
+}
+
+.subtitle {
+  font-size: $font-size-xs;
+  color: $color-gray-500;
+  margin: 0;
+}
+
+.planBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px $spacing-2;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: 700;
+
+  &--pro {
+    background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+    color: #ffffff;
+  }
+
+  &--business {
+    background: linear-gradient(135deg, #F59E0B, #EF4444);
+    color: #ffffff;
+  }
+}
+
+// ── Wrapper with overlay (when children are present) ──────────────────────────
+
+.wrapper {
+  position: relative;
+}
+
+.children {
+  pointer-events: none;
+  user-select: none;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba($color-white, 0.7);
+  backdrop-filter: blur(2px);
+  z-index: 1;
+  border-radius: $radius-lg;
+}
+
+.bannerOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  @include flex-center;
+  padding: $spacing-6;
+}

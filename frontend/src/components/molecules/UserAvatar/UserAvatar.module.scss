@@ -1,0 +1,36 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.wrapper {
+  @include flex(row, center, flex-start, $spacing-3);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.name {
+  font-size: $font-size-sm;
+  font-weight: 600;
+  color: $color-gray-800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.role {
+  font-size: $font-size-xs;
+  color: $color-primary;
+  font-weight: 500;
+}
+
+.email {
+  font-size: $font-size-xs;
+  color: $color-gray-400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -1,0 +1,42 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.container {
+  position: fixed;
+  bottom: $spacing-6;
+  right: $spacing-6;
+  z-index: $z-toast;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+  max-width: 380px;
+}
+
+.toast {
+  @include flex(row, center, space-between, $spacing-3);
+  padding: $spacing-3 $spacing-4;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-lg;
+  animation: slide-in 0.25s ease;
+  border-left: 4px solid;
+
+  &--success { background: #ECFDF5; border-color: $color-success; color: #065F46; }
+  &--error   { background: #FEF2F2; border-color: $color-danger; color: #991B1B; }
+  &--warning { background: #FFFBEB; border-color: $color-warning; color: #92400E; }
+  &--info    { background: #EFF6FF; border-color: $color-primary; color: #1E40AF; }
+}
+
+.message { font-size: $font-size-sm; font-weight: 500; }
+
+.close {
+  color: inherit;
+  opacity: 0.6;
+  font-size: $font-size-xs;
+  flex-shrink: 0;
+  &:hover { opacity: 1; }
+}
+
+@keyframes slide-in {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}

@@ -1,0 +1,124 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.header {
+  height: $header-height;
+  background: $color-white;
+  border-bottom: 1px solid $color-gray-200;
+  @include flex(row, center, space-between);
+  padding: 0 $spacing-5;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  grid-column: 2;
+}
+
+.left, .right {
+  @include flex(row, center, flex-start, $spacing-3);
+}
+
+.toggle-btn {
+  width: 32px;
+  height: 32px;
+  @include flex-center;
+  border-radius: $radius-md;
+  color: $color-gray-500;
+  font-size: $font-size-lg;
+  transition: background $transition-fast;
+
+  &:hover { background: $color-gray-100; color: $color-gray-700; }
+}
+
+// ── Search button ─────────────────────────────────────────────────────────────
+
+.search-btn {
+  @include flex(row, center, flex-start, $spacing-2);
+  height: 32px;
+  padding: 0 $spacing-3;
+  border: 1px solid $color-gray-200;
+  border-radius: $radius-md;
+  background: $color-gray-50;
+  color: $color-gray-400;
+  font-size: $font-size-sm;
+  cursor: pointer;
+  transition: border-color $transition-fast, background $transition-fast;
+  min-width: 200px;
+
+  &:hover {
+    border-color: $color-gray-300;
+    background: $color-white;
+    color: $color-gray-600;
+  }
+}
+
+.search-icon { font-size: $font-size-sm; }
+.search-text { flex: 1; text-align: left; }
+
+.search-kbd {
+  padding: 1px 5px;
+  border: 1px solid $color-gray-300;
+  border-radius: $radius-sm;
+  background: $color-white;
+  font-size: 10px;
+  color: $color-gray-400;
+  font-family: $font-family;
+}
+
+// ── Theme toggle ──────────────────────────────────────────────────────────────
+
+.theme-btn {
+  width: 36px;
+  height: 36px;
+  @include flex-center;
+  border-radius: $radius-md;
+  font-size: $font-size-lg;
+  color: $color-gray-500;
+  transition: background $transition-fast;
+  cursor: pointer;
+
+  &:hover { background: $color-gray-100; color: $color-gray-700; }
+}
+
+// ── Bell ─────────────────────────────────────────────────────────────────────
+
+.bell-btn {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  @include flex-center;
+  border-radius: $radius-md;
+  font-size: $font-size-lg;
+  color: $color-gray-500;
+  transition: background $transition-fast;
+  cursor: pointer;
+
+  &:hover { background: $color-gray-100; color: $color-gray-700; }
+}
+
+.bell-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 3px;
+  background: $color-danger;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: $radius-full;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.user-menu {
+  @include flex(row, center, flex-end, $spacing-3);
+}
+
+.user-name {
+  font-size: $font-size-sm;
+  font-weight: 500;
+  color: $color-gray-700;
+}

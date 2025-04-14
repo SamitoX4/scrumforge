@@ -1,0 +1,65 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.wrapper {
+  @include flex(row, center, flex-start, 0);
+  position: relative;
+  background: $color-white;
+  border: 1px solid $color-gray-200;
+  border-radius: $radius-md;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+
+  &:focus-within {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+  }
+
+  &--disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
+.searchIcon {
+  flex-shrink: 0;
+  padding-left: $spacing-3;
+  font-size: $font-size-sm;
+  color: $color-gray-400;
+  pointer-events: none;
+}
+
+.input {
+  flex: 1;
+  height: 38px;
+  padding: 0 $spacing-3;
+  border: none;
+  background: transparent;
+  font-size: $font-size-sm;
+  color: $color-gray-800;
+  outline: none;
+  min-width: 0;
+
+  &::placeholder { color: $color-gray-400; }
+
+  // Hide native search clear button (webkit)
+  &::-webkit-search-cancel-button { display: none; }
+}
+
+.clearBtn {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  margin-right: $spacing-1;
+  border: none;
+  border-radius: $radius-sm;
+  background: transparent;
+  color: $color-gray-400;
+  font-size: 10px;
+  cursor: pointer;
+  transition: background $transition-fast, color $transition-fast;
+
+  &:hover {
+    background: $color-gray-100;
+    color: $color-gray-700;
+  }
+}

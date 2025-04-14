@@ -1,0 +1,15 @@
+@use '@/styles/variables' as *;
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.icon--xs { font-size: $font-size-xs; }
+.icon--sm { font-size: $font-size-sm; }
+.icon--md { font-size: $font-size-md; }
+.icon--lg { font-size: $font-size-xl; }

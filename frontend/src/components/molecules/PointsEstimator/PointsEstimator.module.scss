@@ -1,0 +1,53 @@
+@use '@/styles/variables' as *;
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-2;
+}
+
+.btn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 $spacing-2;
+  border: 2px solid $color-gray-200;
+  border-radius: $radius-md;
+  background: $color-white;
+  color: $color-gray-700;
+  font-size: $font-size-sm;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color $transition-fast, background $transition-fast, color $transition-fast;
+
+  &:hover:not(:disabled) {
+    border-color: $color-primary;
+    color: $color-primary;
+    background: $color-primary-light;
+  }
+
+  &--active {
+    border-color: $color-primary;
+    background: $color-primary;
+    color: #ffffff;
+
+    &:hover:not(:disabled) {
+      background: $color-primary-dark;
+      border-color: $color-primary-dark;
+      color: #ffffff;
+    }
+  }
+
+  &--clear {
+    color: $color-gray-400;
+    border-style: dashed;
+
+    &.btn--active {
+      border-style: solid;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+}

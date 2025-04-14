@@ -1,0 +1,47 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+}
+
+.menu {
+  position: absolute;
+  width: 160px;
+  background: $color-white;
+  border: 1px solid $color-gray-200;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-lg;
+  z-index: $z-dropdown;
+  overflow: hidden;
+  padding: $spacing-1;
+}
+
+.item {
+  @include flex(row, center, flex-start, $spacing-2);
+  width: 100%;
+  padding: $spacing-2 $spacing-3;
+  border: none;
+  background: none;
+  font-size: $font-size-sm;
+  color: $color-gray-700;
+  cursor: pointer;
+  border-radius: $radius-md;
+  text-align: left;
+  transition: background $transition-fast;
+
+  &:hover { background: $color-gray-50; }
+
+  &--danger {
+    color: $color-danger;
+    &:hover { background: rgba(239, 68, 68, 0.05); }
+  }
+}
+
+.icon {
+  font-size: $font-size-sm;
+  width: 16px;
+  text-align: center;
+  flex-shrink: 0;
+}

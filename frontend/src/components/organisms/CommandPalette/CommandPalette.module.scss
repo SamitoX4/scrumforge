@@ -1,0 +1,177 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: $z-modal;
+  @include flex-center;
+  padding: $spacing-4;
+}
+
+.palette {
+  width: 100%;
+  max-width: 600px;
+  background: $color-white;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-xl;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: 70vh;
+}
+
+// ── Buscador ────────────────────────────────────────────────────────────────
+.searchRow {
+  @include flex(row, center, flex-start, $spacing-3);
+  padding: $spacing-4;
+  border-bottom: 1px solid $color-gray-100;
+  flex-shrink: 0;
+}
+
+.searchIcon {
+  font-size: $font-size-lg;
+  flex-shrink: 0;
+}
+
+.input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: $font-size-lg;
+  color: $color-gray-900;
+  background: transparent;
+  font-family: $font-family;
+
+  &::placeholder {
+    color: $color-gray-400;
+  }
+}
+
+.clearBtn {
+  border: none;
+  background: none;
+  color: $color-gray-400;
+  cursor: pointer;
+  font-size: $font-size-sm;
+  padding: $spacing-1;
+  border-radius: $radius-sm;
+
+  &:hover { color: $color-gray-700; }
+}
+
+// ── Resultados ───────────────────────────────────────────────────────────────
+.results {
+  flex: 1;
+  overflow-y: auto;
+  padding: $spacing-2;
+  @include custom-scrollbar;
+}
+
+.group {
+  margin-bottom: $spacing-1;
+}
+
+.groupLabel {
+  font-size: $font-size-xs;
+  font-weight: 600;
+  color: $color-gray-400;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: $spacing-2 $spacing-3;
+  margin: 0;
+}
+
+.result {
+  @include flex(row, center, flex-start, $spacing-3);
+  width: 100%;
+  padding: $spacing-2 $spacing-3;
+  border: none;
+  background: none;
+  border-radius: $radius-md;
+  cursor: pointer;
+  text-align: left;
+  transition: background $transition-fast;
+
+  &--active {
+    background: $color-primary-light;
+  }
+
+  &:hover {
+    background: $color-gray-50;
+  }
+
+  &--active:hover {
+    background: $color-primary-light;
+  }
+}
+
+.resultIcon {
+  font-size: $font-size-md;
+  flex-shrink: 0;
+  width: 24px;
+  text-align: center;
+}
+
+.resultContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.resultLabel {
+  font-size: $font-size-sm;
+  font-weight: 500;
+  color: $color-gray-900;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.resultSublabel {
+  font-size: $font-size-xs;
+  color: $color-gray-400;
+  margin-top: 1px;
+}
+
+.enterHint {
+  font-size: $font-size-xs;
+  color: $color-gray-400;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.empty {
+  text-align: center;
+  color: $color-gray-400;
+  padding: $spacing-8;
+  font-size: $font-size-sm;
+}
+
+// ── Footer ───────────────────────────────────────────────────────────────────
+.footer {
+  @include flex(row, center, center, $spacing-4);
+  padding: $spacing-3 $spacing-4;
+  border-top: 1px solid $color-gray-100;
+  background: $color-gray-50;
+  flex-shrink: 0;
+
+  span {
+    font-size: $font-size-xs;
+    color: $color-gray-400;
+  }
+
+  kbd {
+    display: inline-block;
+    padding: 1px 5px;
+    border: 1px solid $color-gray-300;
+    border-radius: $radius-sm;
+    background: $color-white;
+    font-size: $font-size-xs;
+    color: $color-gray-600;
+    font-family: $font-family;
+    margin-right: 3px;
+  }
+}

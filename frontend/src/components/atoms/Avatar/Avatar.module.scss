@@ -1,0 +1,22 @@
+@use '@/styles/variables' as *;
+
+.avatar {
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+
+  &--xs { width: 20px; height: 20px; font-size: 9px; }
+  &--sm { width: 28px; height: 28px; font-size: 11px; }
+  &--md { width: 36px; height: 36px; font-size: 13px; }
+  &--lg { width: 48px; height: 48px; font-size: 16px; }
+
+  &--initials {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    user-select: none;
+  }
+}

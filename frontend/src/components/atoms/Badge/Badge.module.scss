@@ -1,0 +1,32 @@
+@use '@/styles/variables' as *;
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px $spacing-2;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+
+  // Status
+  &--TODO        { background: #F1F5F9; color: $color-gray-600; }
+  &--IN_PROGRESS { background: #EFF6FF; color: $color-status-in-progress; }
+  &--IN_REVIEW   { background: #F5F3FF; color: $color-status-in-review; }
+  &--DONE        { background: #ECFDF5; color: $color-status-done; }
+
+  // Priority
+  &--CRITICAL { background: #FEF2F2; color: $color-priority-critical; }
+  &--HIGH     { background: #FFF7ED; color: $color-priority-high; }
+  &--MEDIUM   { background: #FEFCE8; color: $color-priority-medium; }
+  &--LOW      { background: #F1F5F9; color: $color-priority-low; }
+
+  // Role
+  &--PRODUCT_OWNER { background: #F5F3FF; color: #7C3AED; }
+  &--SCRUM_MASTER  { background: #EFF6FF; color: #1D4ED8; }
+  &--DEVELOPER     { background: #ECFDF5; color: #065F46; }
+  &--STAKEHOLDER   { background: #F8FAFC; color: $color-gray-600; }
+
+  &--default { background: $color-gray-100; color: $color-gray-600; }
+}
