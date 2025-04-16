@@ -1,0 +1,20 @@
+@use '@/styles/variables' as *;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+}
+
+.preview {
+  font-size: $font-size-xs;
+  color: $color-gray-500;
+
+  code {
+    font-family: 'Fira Code', 'Courier New', monospace;
+    background: $color-gray-100;
+    padding: 1px $spacing-2;
+    border-radius: $radius-sm;
+    color: $color-gray-700;
+  }
+}

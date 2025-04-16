@@ -1,0 +1,128 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.container {
+  position: relative;
+  padding: $spacing-3;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.trigger {
+  @include flex(row, center, flex-start, $spacing-2);
+  width: 100%;
+  padding: $spacing-2 $spacing-2;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: $radius-md;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background $transition-fast;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+}
+
+.avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: $radius-sm;
+  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  @include flex-center;
+  font-size: $font-size-xs;
+  font-weight: 700;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.name {
+  flex: 1;
+  font-size: $font-size-sm;
+  font-weight: 500;
+  @include truncate;
+  text-align: left;
+}
+
+.chevron {
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.5);
+  flex-shrink: 0;
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% - $spacing-1);
+  left: $spacing-3;
+  right: $spacing-3;
+  background: #1E293B;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: $radius-md;
+  box-shadow: $shadow-xl;
+  z-index: $z-dropdown;
+  list-style: none;
+  padding: $spacing-1;
+  margin: 0;
+}
+
+.menuItem {
+  @include flex(row, center, flex-start, $spacing-2);
+  width: 100%;
+  padding: $spacing-2 $spacing-2;
+  background: none;
+  border: none;
+  border-radius: $radius-sm;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  transition: background $transition-fast;
+
+  &:hover,
+  &[data-active='true'] {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+  }
+}
+
+.menuAvatar {
+  width: 26px;
+  height: 26px;
+  border-radius: $radius-sm;
+  background: linear-gradient(135deg, #34d399, #60a5fa);
+  @include flex-center;
+  font-size: $font-size-xs;
+  font-weight: 700;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.menuInfo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.menuName {
+  font-size: $font-size-sm;
+  font-weight: 500;
+  @include truncate;
+  text-align: left;
+}
+
+.menuSlug {
+  font-size: $font-size-xs;
+  color: rgba(255, 255, 255, 0.45);
+  @include truncate;
+  text-align: left;
+}
+
+.check {
+  font-size: $font-size-xs;
+  color: #60a5fa;
+  flex-shrink: 0;
+}
+
+.divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: $spacing-1 0;
+}
