@@ -1,0 +1,37 @@
+# frontend/docker-compose.yml — Frontend como servicio independiente (nginx)
+#
+# Úsalo cuando el frontend corre en un servidor separado del backend.
+# IMPORTANTE: ejecutar siempre desde la raíz del repositorio (ScrumForge/).
+#
+# Uso:
+#   cd ScrumForge/
+#   VITE_GRAPHQL_URL=https://api.tudominio.com/graphql \
+#   VITE_WS_URL=wss://api.tudominio.com/graphql \
+#   VITE_BACKEND_URL=https://api.tudominio.com \
+#   docker compose -f frontend/docker-compose.yml up -d
+#
+# O define las variables en un archivo .env en la raíz del repo.
+#
+# NOTA: las URLs del backend se hornean en el bundle de Vite en build time.
+# Si cambias las URLs, debes reconstruir la imagen (docker compose build).
+
+services:
+  frontend:
+    build:
+      context: ..                      # raíz del repositorio (ScrumForge/)
+      dockerfile: frontend/Dockerfile
+      args:
+        VITE_GRAPHQL_URL: ${VITE_GRAPHQL_URL:?Definir VITE_GRAPHQL_URL (ej: https://api.tudominio.com/graphql)}
+        VITE_WS_URL: ${VITE_WS_URL:?Definir VITE_WS_URL (ej: wss://api.tudominio.com/graphql)}
+        VITE_BACKEND_URL: ${VITE_BACKEND_URL:?Definir VITE_BACKEND_URL (ej: https://api.tudominio.com)}
+        VITE_ENABLED_EXTENSIONS: ${VITE_ENABLED_EXTENSIONS:-}
+    container_name: scrumforge-frontend
+    restart: unless-stopped
+    ports:
+      - '${FRONTEND_PORT:-80}:80'
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://localhost:80/ || exit 1']
+      interval: 30s
+      timeout: 10s
+      start_period: 10s
+      retries: 3
