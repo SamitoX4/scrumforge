@@ -1,0 +1,155 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.sectionHeader {
+  @include flex(row, center, space-between);
+  margin-bottom: $spacing-4;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: 600;
+  color: $color-gray-800;
+}
+
+.empty {
+  color: $color-gray-400;
+  font-size: $font-size-sm;
+  padding: $spacing-4;
+  background: $color-gray-50;
+  border-radius: $radius-lg;
+  text-align: center;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.storyRow {
+  @include card;
+  padding: $spacing-3 $spacing-4;
+  @include flex(row, center, flex-start, $spacing-3);
+  cursor: pointer;
+  transition: border-color $transition-fast, box-shadow $transition-fast, background $transition-fast;
+
+  &:hover {
+    border-color: $color-primary;
+    box-shadow: $shadow-md;
+  }
+
+  &[data-selected] {
+    background: $color-primary-light;
+    border-color: rgba($color-primary, 0.4);
+  }
+}
+
+.dragHandle {
+  color: $color-gray-300;
+  font-size: $font-size-sm;
+  cursor: grab;
+  flex-shrink: 0;
+  line-height: 1;
+  padding: 0 $spacing-1;
+
+  &:active { cursor: grabbing; }
+}
+
+.checkbox {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  cursor: pointer;
+  accent-color: $color-primary;
+}
+
+.epicDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.storyTitle {
+  flex: 1;
+  font-size: $font-size-sm;
+  font-weight: 500;
+  color: $color-gray-800;
+  @include truncate;
+}
+
+.storyMeta {
+  @include flex(row, center, flex-end, $spacing-2);
+  flex-shrink: 0;
+}
+
+.points {
+  font-size: $font-size-xs;
+  font-weight: 600;
+  color: $color-gray-500;
+  background: $color-gray-100;
+  padding: 2px $spacing-2;
+  border-radius: $radius-sm;
+}
+
+.addRow {
+  @include flex(row, center, flex-start, $spacing-2);
+  width: 100%;
+  padding: $spacing-3 $spacing-4;
+  font-size: $font-size-sm;
+  color: $color-gray-400;
+  background: transparent;
+  border: 2px dashed $color-gray-200;
+  border-radius: $radius-lg;
+  cursor: pointer;
+  transition: all $transition-fast;
+  margin-top: $spacing-1;
+
+  &:hover {
+    color: $color-primary;
+    border-color: $color-primary;
+    background: $color-primary-light;
+  }
+}
+
+.quickCreateRow {
+  @include card;
+  padding: $spacing-2 $spacing-3;
+  margin-top: $spacing-1;
+}
+
+.quickInput {
+  width: 100%;
+  font-size: $font-size-sm;
+  color: $color-gray-800;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: inherit;
+
+  &::placeholder { color: $color-gray-400; }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+}
+
+.select {
+  width: 100%;
+  padding: $spacing-2 $spacing-3;
+  font-size: $font-size-sm;
+  color: $color-gray-800;
+  background: $color-white;
+  border: 1px solid $color-gray-200;
+  border-radius: $radius-md;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+  }
+}

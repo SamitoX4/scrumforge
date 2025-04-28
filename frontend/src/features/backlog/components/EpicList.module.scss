@@ -1,0 +1,178 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.sectionHeader {
+  @include flex(row, center, space-between);
+  margin-bottom: $spacing-4;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: 600;
+  color: $color-gray-800;
+}
+
+.empty {
+  color: $color-gray-400;
+  font-size: $font-size-sm;
+  padding: $spacing-4;
+  background: $color-gray-50;
+  border-radius: $radius-lg;
+  text-align: center;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.epicRow {
+  @include card;
+  padding: $spacing-3 $spacing-4;
+  @include flex(row, center, flex-start, $spacing-3);
+  cursor: pointer;
+  transition: background $transition-fast;
+
+  &:hover {
+    background: $color-gray-50;
+  }
+}
+
+.dragHandle {
+  color: $color-gray-300;
+  font-size: $font-size-sm;
+  cursor: grab;
+  flex-shrink: 0;
+  line-height: 1;
+  padding: 0 $spacing-1;
+  user-select: none;
+
+  &:active { cursor: grabbing; }
+}
+
+.epicColor {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.epicTitle {
+  font-size: $font-size-sm;
+  font-weight: 500;
+  color: $color-gray-800;
+  flex: 1;
+}
+
+.epicPoints {
+  font-size: $font-size-xs;
+  color: $color-gray-400;
+  font-variant-numeric: tabular-nums;
+}
+
+.deleteEpicBtn {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: $color-gray-400;
+  cursor: pointer;
+  font-size: $font-size-sm;
+  padding: 2px 4px;
+  border-radius: $radius-sm;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity $transition-fast, color $transition-fast;
+
+  .epicRow:hover & {
+    opacity: 1;
+  }
+
+  &:hover {
+    color: $color-danger;
+  }
+}
+
+.deleteForm {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+
+  p {
+    color: $color-gray-700;
+    font-size: $font-size-sm;
+    line-height: 1.5;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+}
+
+.select {
+  width: 100%;
+  padding: $spacing-2 $spacing-3;
+  font-size: $font-size-sm;
+  color: $color-gray-800;
+  background: $color-white;
+  border: 1px solid $color-gray-200;
+  border-radius: $radius-md;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  }
+}
+
+.colorPicker {
+  @include flex(row, center, flex-start, $spacing-2);
+  flex-wrap: wrap;
+  margin-bottom: $spacing-2;
+}
+
+.colorSwatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform $transition-fast, border-color $transition-fast;
+
+  &:hover { transform: scale(1.15); }
+
+  &[data-selected] {
+    border-color: $color-gray-800;
+    transform: scale(1.15);
+  }
+}
+
+.colorCustom {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid $color-gray-200;
+  cursor: pointer;
+  padding: 0;
+  overflow: hidden;
+  background: none;
+}
+
+.colorPreview {
+  @include flex(row, center, flex-start, $spacing-2);
+}
+
+.colorPreviewDot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.colorPreviewCode {
+  font-size: $font-size-xs;
+  color: $color-gray-500;
+}

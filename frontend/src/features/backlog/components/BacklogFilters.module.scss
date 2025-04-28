@@ -1,0 +1,55 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.bar {
+  @include flex(row, center, space-between, $spacing-3);
+  padding: $spacing-3 $spacing-4;
+  background: $color-gray-50;
+  border: 1px solid $color-gray-100;
+  border-radius: $radius-lg;
+  flex-wrap: wrap;
+  gap: $spacing-2;
+}
+
+.filters {
+  @include flex(row, center, flex-start, $spacing-2);
+  flex-wrap: wrap;
+}
+
+.select {
+  height: 34px;
+  padding: 0 $spacing-3;
+  border: 1px solid $color-gray-200;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $color-gray-700;
+  background: $color-white;
+  cursor: pointer;
+  transition: border-color $transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+  }
+}
+
+.clearBtn {
+  height: 34px;
+  padding: 0 $spacing-3;
+  border: none;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $color-primary;
+  background: $color-primary-light;
+  cursor: pointer;
+  transition: opacity $transition-fast;
+
+  &:hover { opacity: 0.8; }
+}
+
+.count {
+  font-size: $font-size-xs;
+  color: $color-gray-500;
+  white-space: nowrap;
+  flex-shrink: 0;
+}

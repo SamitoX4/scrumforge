@@ -1,0 +1,245 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+$panel-width: 400px;
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: calc(#{$z-modal} - 10);
+  animation: fadeIn $transition-fast;
+}
+
+.panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: $panel-width;
+  background: $color-white;
+  border-left: 1px solid $color-gray-200;
+  box-shadow: $shadow-xl;
+  z-index: $z-modal;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn $transition-normal;
+
+  @include mobile {
+    width: 100vw;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
+
+.panelHeader {
+  @include flex(row, center, space-between);
+  padding: $spacing-4 $spacing-5;
+  border-bottom: 1px solid $color-gray-100;
+  flex-shrink: 0;
+  gap: $spacing-3;
+}
+
+.panelLabel {
+  font-size: $font-size-xs;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: $color-gray-400;
+}
+
+.panelActions {
+  @include flex(row, center, flex-end, $spacing-2);
+}
+
+.closeBtn {
+  @include flex-center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: none;
+  color: $color-gray-400;
+  font-size: $font-size-sm;
+  border-radius: $radius-md;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: $color-gray-100;
+    color: $color-gray-700;
+  }
+}
+
+// ── Body ──────────────────────────────────────────────────────────────────────
+
+.body {
+  flex: 1;
+  overflow-y: auto;
+  @include custom-scrollbar;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-5;
+  padding: $spacing-5;
+}
+
+// ── Title ─────────────────────────────────────────────────────────────────────
+
+.titleRow {
+  @include flex(row, flex-start, flex-start, $spacing-3);
+}
+
+.colorStrip {
+  width: 4px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  align-self: stretch;
+  min-height: 48px;
+}
+
+.titleInput {
+  flex: 1;
+  font-size: $font-size-xl;
+  font-weight: 600;
+  color: $color-gray-900;
+  border: none;
+  outline: none;
+  resize: none;
+  font-family: $font-family;
+  line-height: 1.4;
+  padding: 0;
+  background: transparent;
+  overflow: hidden;
+
+  &:focus {
+    background: $color-gray-50;
+    border-radius: $radius-md;
+    padding: $spacing-2;
+  }
+}
+
+// ── Meta ──────────────────────────────────────────────────────────────────────
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid $color-gray-100;
+  border-radius: $radius-md;
+  overflow: hidden;
+}
+
+.metaRow {
+  @include flex(row, center, flex-start, $spacing-3);
+  padding: $spacing-3 $spacing-4;
+  min-height: 48px;
+  gap: $spacing-3;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid $color-gray-100;
+  }
+}
+
+.metaLabel {
+  font-size: $font-size-sm;
+  color: $color-gray-500;
+  flex-shrink: 0;
+  width: 80px;
+}
+
+.metaSelect {
+  flex: 1;
+  height: 32px;
+  padding: 0 $spacing-2;
+  border: 1px solid $color-gray-200;
+  border-radius: $radius-sm;
+  font-size: $font-size-sm;
+  color: $color-gray-800;
+  background: $color-white;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+  }
+}
+
+// ── Color picker ──────────────────────────────────────────────────────────────
+
+.colorPicker {
+  @include flex(row, center, flex-start, $spacing-2);
+  flex-wrap: wrap;
+}
+
+.colorSwatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform $transition-fast, border-color $transition-fast;
+
+  &:hover { transform: scale(1.15); }
+
+  &[data-selected] {
+    border-color: $color-gray-800;
+    transform: scale(1.15);
+  }
+}
+
+.colorCustom {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid $color-gray-200;
+  cursor: pointer;
+  padding: 0;
+  overflow: hidden;
+  background: none;
+}
+
+// ── Description ───────────────────────────────────────────────────────────────
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.sectionTitle {
+  font-size: $font-size-sm;
+  font-weight: 600;
+  color: $color-gray-700;
+  margin: 0;
+}
+
+.descriptionInput {
+  width: 100%;
+  border: 1px solid $color-gray-200;
+  border-radius: $radius-md;
+  padding: $spacing-3;
+  font-size: $font-size-sm;
+  color: $color-gray-800;
+  font-family: $font-family;
+  line-height: 1.6;
+  resize: vertical;
+  min-height: 120px;
+  background: $color-gray-50;
+  transition: border-color $transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    background: $color-white;
+  }
+
+  &::placeholder { color: $color-gray-400; }
+}

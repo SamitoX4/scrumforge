@@ -1,0 +1,431 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+$panel-width: 420px;
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: calc(#{$z-modal} - 10);
+  animation: fadeIn $transition-fast;
+}
+
+.panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: $panel-width;
+  background: $color-white;
+  border-left: 1px solid $color-gray-200;
+  box-shadow: $shadow-xl;
+  z-index: $z-modal;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn $transition-normal;
+
+  @include mobile {
+    width: 100vw;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.panelHeader {
+  @include flex(row, center, space-between);
+  padding: $spacing-4 $spacing-5;
+  border-bottom: 1px solid $color-gray-100;
+  flex-shrink: 0;
+  gap: $spacing-3;
+}
+
+.panelLabel {
+  font-size: $font-size-xs;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: $color-gray-400;
+}
+
+.panelActions {
+  @include flex(row, center, flex-end, $spacing-2);
+}
+
+.closeBtn {
+  @include flex-center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: none;
+  color: $color-gray-400;
+  font-size: $font-size-sm;
+  border-radius: $radius-md;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: $color-gray-100;
+    color: $color-gray-700;
+  }
+}
+
+.loading {
+  @include flex-center;
+  flex: 1;
+}
+
+.body {
+  flex: 1;
+  overflow-y: auto;
+  @include custom-scrollbar;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-5;
+  padding: $spacing-5;
+}
+
+.titleInput {
+  width: 100%;
+  font-size: $font-size-xl;
+  font-weight: 600;
+  color: $color-gray-900;
+  border: none;
+  outline: none;
+  resize: none;
+  font-family: $font-family;
+  line-height: 1.4;
+  padding: 0;
+  background: transparent;
+
+  &:focus {
+    background: $color-gray-50;
+    border-radius: $radius-md;
+    padding: $spacing-2;
+    margin: -$spacing-2;
+  }
+}
+
+// ── Meta fields ──────────────────────────────────────────────────────────────
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid $color-gray-100;
+  border-radius: $radius-md;
+  overflow: hidden;
+}
+
+.metaRow {
+  @include flex(row, center, space-between, $spacing-3);
+  padding: $spacing-3 $spacing-4;
+  min-height: 44px;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid $color-gray-100;
+  }
+}
+
+.metaLabel {
+  font-size: $font-size-sm;
+  color: $color-gray-500;
+  flex-shrink: 0;
+  width: 90px;
+}
+
+.metaSelect {
+  flex: 1;
+  height: 32px;
+  padding: 0 $spacing-2;
+  border: 1px solid $color-gray-200;
+  border-radius: $radius-sm;
+  font-size: $font-size-sm;
+  color: $color-gray-800;
+  background: $color-white;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+  }
+}
+
+// ── Points picker ────────────────────────────────────────────────────────────
+
+.pointsPicker {
+  @include flex(row, center, flex-start, $spacing-1);
+  flex-wrap: wrap;
+}
+
+.pointBtn {
+  width: 30px;
+  height: 28px;
+  border: 1px solid $color-gray-200;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: 600;
+  color: $color-gray-600;
+  background: $color-white;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    border-color: $color-primary;
+    color: $color-primary;
+  }
+
+  &--active {
+    background: $color-primary;
+    border-color: $color-primary;
+    color: #ffffff;
+  }
+}
+
+// ── Assignee ─────────────────────────────────────────────────────────────────
+
+.assignee {
+  @include flex(row, center, flex-start, $spacing-2);
+  font-size: $font-size-sm;
+  color: $color-gray-700;
+}
+
+// ── Sections ─────────────────────────────────────────────────────────────────
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.sectionHeader {
+  @include flex(row, center, space-between);
+}
+
+.sectionTitle {
+  font-size: $font-size-sm;
+  font-weight: 600;
+  color: $color-gray-700;
+  margin: 0;
+}
+
+.addTaskBtn {
+  background: none;
+  border: none;
+  font-size: $font-size-xs;
+  color: $color-primary;
+  cursor: pointer;
+  padding: 2px $spacing-2;
+  border-radius: $radius-sm;
+
+  &:hover {
+    background: $color-gray-100;
+  }
+}
+
+.addTaskRow {
+  @include flex(row, center, flex-start, $spacing-2);
+  margin-top: $spacing-2;
+}
+
+.taskInput {
+  flex: 1;
+  height: 32px;
+  border: 1px solid $color-gray-200;
+  border-radius: $radius-md;
+  padding: 0 $spacing-3;
+  font-size: $font-size-sm;
+  color: $color-gray-800;
+  background: $color-white;
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+  }
+}
+
+.cancelTaskBtn {
+  background: none;
+  border: none;
+  font-size: $font-size-xs;
+  color: $color-gray-500;
+  cursor: pointer;
+  padding: 2px $spacing-2;
+
+  &:hover { color: $color-gray-800; }
+}
+
+.descriptionInput {
+  width: 100%;
+  border: 1px solid $color-gray-200;
+  border-radius: $radius-md;
+  padding: $spacing-3;
+  font-size: $font-size-sm;
+  color: $color-gray-800;
+  font-family: $font-family;
+  line-height: 1.6;
+  resize: vertical;
+  min-height: 100px;
+  background: $color-gray-50;
+  transition: border-color $transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    background: $color-white;
+  }
+}
+
+// ── Task list ─────────────────────────────────────────────────────────────────
+
+.taskList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.taskItem {
+  @include flex(row, center, flex-start, $spacing-3);
+  padding: $spacing-2 $spacing-3;
+  background: $color-gray-50;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+}
+
+.taskStatus {
+  font-size: $font-size-md;
+  flex-shrink: 0;
+}
+
+.taskTitle {
+  flex: 1;
+  color: $color-gray-700;
+  @include truncate;
+}
+
+.taskTitle--done {
+  flex: 1;
+  color: $color-gray-400;
+  text-decoration: line-through;
+  @include truncate;
+}
+
+// ── Comments ──────────────────────────────────────────────────────────────────
+
+.commentList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.comment {
+  @include flex(row, flex-start, flex-start, $spacing-3);
+}
+
+.commentBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.commentMeta {
+  @include flex(row, center, flex-start, $spacing-2);
+  margin-bottom: $spacing-1;
+}
+
+.commentAuthor {
+  font-size: $font-size-xs;
+  font-weight: 600;
+  color: $color-gray-800;
+}
+
+.commentDate {
+  font-size: $font-size-xs;
+  color: $color-gray-400;
+}
+
+.commentText {
+  font-size: $font-size-sm;
+  color: $color-gray-700;
+  line-height: 1.5;
+  margin: 0;
+  word-break: break-word;
+}
+
+.deleteCommentBtn {
+  width: 20px;
+  height: 20px;
+  @include flex-center;
+  border: none;
+  background: none;
+  color: $color-gray-300;
+  font-size: 10px;
+  border-radius: $radius-sm;
+  cursor: pointer;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity $transition-fast, color $transition-fast;
+
+  .comment:hover & {
+    opacity: 1;
+  }
+
+  &:hover {
+    color: $color-danger;
+  }
+}
+
+.addComment {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+  align-items: flex-end;
+}
+
+.commentInput {
+  width: 100%;
+  border: 1px solid $color-gray-200;
+  border-radius: $radius-md;
+  padding: $spacing-2 $spacing-3;
+  font-size: $font-size-sm;
+  color: $color-gray-800;
+  font-family: $font-family;
+  line-height: 1.5;
+  resize: none;
+  background: $color-gray-50;
+  transition: border-color $transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    background: $color-white;
+  }
+
+  &::placeholder { color: $color-gray-400; }
+}
+
+// ── Footer ────────────────────────────────────────────────────────────────────
+
+.footer {
+  padding-top: $spacing-4;
+  border-top: 1px solid $color-gray-100;
+  margin-top: auto;
+}
+
+.date {
+  font-size: $font-size-xs;
+  color: $color-gray-400;
+}
