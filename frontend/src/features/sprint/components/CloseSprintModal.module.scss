@@ -1,0 +1,118 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-5;
+}
+
+.stats {
+  @include flex(row, stretch, center, $spacing-4);
+  padding: $spacing-4;
+  background: $color-gray-50;
+  border-radius: $radius-md;
+  text-align: center;
+}
+
+.stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+
+  &:not(:last-child) {
+    border-right: 1px solid $color-gray-200;
+  }
+}
+
+.statValue {
+  font-size: $font-size-2xl;
+  font-weight: 700;
+  color: $color-gray-800;
+}
+
+.statLabel {
+  font-size: $font-size-xs;
+  color: $color-gray-500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.allDone {
+  font-size: $font-size-sm;
+  color: $color-success;
+  text-align: center;
+  padding: $spacing-3;
+  background: rgba($color-success, 0.08);
+  border-radius: $radius-md;
+  margin: 0;
+}
+
+.incompleteSection {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+}
+
+.incompleteMessage {
+  font-size: $font-size-sm;
+  color: $color-gray-600;
+  margin: 0;
+  line-height: 1.6;
+
+  strong {
+    color: $color-gray-900;
+  }
+}
+
+.moveOptions {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.moveLabel {
+  font-size: $font-size-xs;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: $color-gray-400;
+  margin: 0;
+}
+
+.sprintButtons {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.sprintBtn {
+  @include flex(row, center, space-between);
+  padding: $spacing-3 $spacing-4;
+  border: 1px solid $color-gray-200;
+  border-radius: $radius-md;
+  background: $color-white;
+  font-size: $font-size-sm;
+  font-weight: 500;
+  color: $color-gray-800;
+  cursor: pointer;
+  transition: all $transition-fast;
+  text-align: left;
+
+  &:hover {
+    border-color: $color-primary;
+    color: $color-primary;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.sprintBtnCount {
+  font-size: $font-size-xs;
+  color: $color-gray-400;
+  font-weight: 400;
+}

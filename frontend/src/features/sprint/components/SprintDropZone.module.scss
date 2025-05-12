@@ -1,0 +1,29 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.zone {
+  border-radius: $radius-lg;
+  border: 2px dashed transparent;
+  transition: border-color $transition-fast, background $transition-fast;
+  padding: $spacing-2;
+  margin: -$spacing-2;
+
+  &--over {
+    border-color: $color-primary;
+    background: $color-primary-light;
+  }
+}
+
+.dropHint {
+  text-align: center;
+  font-size: $font-size-xs;
+  color: $color-primary;
+  font-weight: 500;
+  padding: $spacing-2 0 0;
+  animation: fadeIn 100ms ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}

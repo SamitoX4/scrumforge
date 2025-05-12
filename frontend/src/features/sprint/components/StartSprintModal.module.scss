@@ -1,0 +1,40 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-5;
+}
+
+.summary {
+  @include flex(row, center, center, $spacing-3);
+  padding: $spacing-3 $spacing-4;
+  background: $color-primary-light;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $color-gray-700;
+}
+
+.summaryItem {
+  strong { color: $color-primary; }
+}
+
+.summaryDivider {
+  color: $color-gray-300;
+}
+
+.dates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-4;
+}
+
+.warning {
+  padding: $spacing-2 $spacing-3;
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: #92400E;
+}
