@@ -1,0 +1,45 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.page { padding: $spacing-6; height: calc(100vh - #{$header-height}); display: flex; flex-direction: column; }
+
+.loading, .empty { @include flex-center; flex-direction: column; gap: $spacing-4; height: 60vh; color: $color-gray-400; }
+
+.empty h2 { font-size: $font-size-xl; color: $color-gray-700; }
+
+.header {
+  @include flex(row, flex-start, space-between);
+  margin-bottom: $spacing-4;
+}
+
+
+.sprintName { font-size: $font-size-xl; font-weight: 700; color: $color-gray-900; }
+.goal       { font-size: $font-size-sm; color: $color-gray-500; margin-top: $spacing-1; }
+
+.headerRight { @include flex(row, center, flex-end, $spacing-4); }
+
+.stats { @include flex(row, center, flex-end, $spacing-4); }
+
+.stat {
+  font-size: $font-size-sm;
+  font-weight: 600;
+  color: $color-gray-600;
+  background: $color-white;
+  padding: $spacing-1 $spacing-3;
+  border-radius: $radius-full;
+  border: 1px solid $color-gray-200;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 1fr;
+  gap: $spacing-4;
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  min-height: 0;
+  margin-top: $spacing-4;
+  align-items: stretch;
+  @include custom-scrollbar;
+}

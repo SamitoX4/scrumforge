@@ -1,0 +1,83 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.hint {
+  font-size: $font-size-sm;
+  color: $color-gray-500;
+  margin-bottom: $spacing-4;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.row {
+  @include flex(row, center, flex-start, $spacing-3);
+  padding: $spacing-3;
+  background: $color-gray-50;
+  border: 1px solid $color-gray-100;
+  border-radius: $radius-md;
+}
+
+.orderBtns {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.orderBtn {
+  width: 24px;
+  height: 20px;
+  border: 1px solid $color-gray-200;
+  border-radius: $radius-sm;
+  background: $color-white;
+  font-size: 10px;
+  cursor: pointer;
+  color: $color-gray-600;
+  transition: background $transition-fast;
+  line-height: 1;
+
+  &:hover:not(:disabled) {
+    background: $color-gray-200;
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+}
+
+.colorPicker {
+  width: 36px;
+  height: 36px;
+  border: 2px solid $color-gray-200;
+  border-radius: $radius-md;
+  cursor: pointer;
+  padding: 2px;
+  background: transparent;
+  flex-shrink: 0;
+
+  &::-webkit-color-swatch-wrapper { padding: 0; }
+  &::-webkit-color-swatch { border: none; border-radius: $radius-sm; }
+}
+
+.titleField {
+  flex: 1;
+  min-width: 0;
+}
+
+.wipField {
+  width: 72px;
+  flex-shrink: 0;
+}
+
+.statusTag {
+  font-size: $font-size-xs;
+  font-weight: 600;
+  color: $color-gray-400;
+  font-family: monospace;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
