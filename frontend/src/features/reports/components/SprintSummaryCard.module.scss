@@ -1,0 +1,95 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.card {
+  @include card;
+  padding: $spacing-6;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.header {
+  @include flex(row, flex-start, space-between, $spacing-3);
+  flex-wrap: wrap;
+}
+
+.name {
+  font-size: $font-size-xl;
+  font-weight: 700;
+  color: $color-gray-900;
+  margin: 0;
+}
+
+.goal {
+  font-size: $font-size-sm;
+  color: $color-gray-500;
+  margin: $spacing-1 0 0;
+  font-style: italic;
+}
+
+.dates {
+  @include flex(row, center, flex-start, $spacing-2);
+  font-size: $font-size-sm;
+  color: $color-gray-600;
+}
+
+.dateSep {
+  color: $color-gray-400;
+}
+
+// Días restantes
+.daysOk    { font-size: $font-size-sm; font-weight: 600; color: $color-success; }
+.daysWarn  { font-size: $font-size-sm; font-weight: 600; color: $color-warning; }
+.daysDanger { font-size: $font-size-sm; font-weight: 600; color: $color-danger; }
+
+// Barra de progreso
+.progressBar {
+  width: 100%;
+  height: 8px;
+  background: $color-gray-100;
+  border-radius: $radius-full;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: $color-primary;
+  border-radius: $radius-full;
+  transition: width $transition-normal;
+  min-width: 4px;
+}
+
+.progressLabel {
+  font-size: $font-size-xs;
+  color: $color-gray-500;
+  margin-top: -$spacing-1;
+}
+
+// Stats row
+.stats {
+  @include flex(row, center, flex-start, $spacing-6);
+  padding-top: $spacing-2;
+  border-top: 1px solid $color-gray-100;
+}
+
+.stat {
+  @include flex(row, baseline, flex-start, $spacing-1);
+}
+
+.statValue {
+  font-size: $font-size-2xl;
+  font-weight: 700;
+  color: $color-gray-900;
+}
+
+.statLabel {
+  font-size: $font-size-sm;
+  color: $color-gray-400;
+}
+
+.statDivider {
+  width: 1px;
+  height: 32px;
+  background: $color-gray-200;
+}
