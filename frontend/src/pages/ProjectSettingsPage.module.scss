@@ -1,0 +1,153 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.page {
+  padding: $spacing-8;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-8;
+}
+
+.loading { @include flex-center; height: 60vh; }
+
+.pageTitle {
+  font-size: $font-size-2xl;
+  font-weight: 700;
+  color: $color-gray-900;
+}
+
+// ── Sections ──────────────────────────────────────────────────────────────────
+
+.section {
+  @include card;
+  padding: $spacing-6;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-5;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: 600;
+  color: $color-gray-800;
+  @include flex(row, center, flex-start, $spacing-3);
+  margin: 0;
+}
+
+.memberCount {
+  font-size: $font-size-xs;
+  font-weight: 500;
+  color: $color-gray-500;
+  background: $color-gray-100;
+  padding: 2px $spacing-2;
+  border-radius: $radius-full;
+}
+
+// ── Form ──────────────────────────────────────────────────────────────────────
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+  max-width: 440px;
+}
+
+// ── Section header ────────────────────────────────────────────────────────────
+
+.sectionHeader {
+  @include flex(row, center, space-between, $spacing-4);
+}
+
+// ── Member list ───────────────────────────────────────────────────────────────
+
+.memberList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+}
+
+.memberRow {
+  @include flex(row, center, flex-start, $spacing-3);
+  padding: $spacing-3;
+  border-radius: $radius-md;
+  transition: background $transition-fast;
+
+  &:hover { background: $color-gray-50; }
+}
+
+.memberInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.memberName {
+  font-size: $font-size-sm;
+  font-weight: 500;
+  color: $color-gray-800;
+}
+
+.memberEmail {
+  font-size: $font-size-xs;
+  color: $color-gray-400;
+}
+
+.removeMemberBtn {
+  opacity: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: $color-gray-400;
+  padding: $spacing-1;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  line-height: 1;
+  transition: color $transition-fast, opacity $transition-fast;
+
+  .memberRow:hover & {
+    opacity: 1;
+  }
+
+  &:hover {
+    color: $color-danger;
+  }
+}
+
+// ── Danger zone ───────────────────────────────────────────────────────────────
+
+.dangerSection {
+  border: 1px solid rgba($color-danger, 0.3);
+  border-radius: $radius-lg;
+  padding: $spacing-6;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+}
+
+.dangerTitle {
+  font-size: $font-size-lg;
+  font-weight: 600;
+  color: $color-danger;
+  margin: 0;
+}
+
+.dangerRow {
+  @include flex(row, center, space-between, $spacing-6);
+}
+
+.dangerLabel {
+  font-size: $font-size-sm;
+  font-weight: 500;
+  color: $color-gray-800;
+  margin: 0 0 $spacing-1;
+}
+
+.dangerDesc {
+  font-size: $font-size-xs;
+  color: $color-gray-500;
+  margin: 0;
+  max-width: 400px;
+  line-height: 1.5;
+}
