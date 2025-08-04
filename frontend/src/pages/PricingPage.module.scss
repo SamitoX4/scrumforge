@@ -1,0 +1,226 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-gray-50;
+  display: flex;
+  flex-direction: column;
+}
+
+// ── Nav ───────────────────────────────────────────────────────────────────────
+
+.nav {
+  @include flex(row, center, space-between, $spacing-4);
+  padding: $spacing-4 $spacing-8;
+  background: $color-white;
+  border-bottom: 1px solid $color-gray-200;
+  position: sticky;
+  top: 0;
+  z-index: $z-dropdown;
+}
+
+.brand {
+  @include flex(row, center, flex-start, $spacing-2);
+}
+
+.brand__icon {
+  font-size: 1.25rem;
+}
+
+.brand__name {
+  font-size: $font-size-lg;
+  font-weight: 700;
+  color: $color-gray-900;
+}
+
+.navActions {
+  @include flex(row, center, flex-end, $spacing-3);
+}
+
+// ── Hero ──────────────────────────────────────────────────────────────────────
+
+.hero {
+  text-align: center;
+  padding: $spacing-12 $spacing-8 $spacing-10;
+}
+
+.heroTitle {
+  font-size: $font-size-3xl;
+  font-weight: 800;
+  color: $color-gray-900;
+  margin: 0 0 $spacing-4;
+}
+
+.heroSubtitle {
+  font-size: $font-size-lg;
+  color: $color-gray-500;
+  margin: 0;
+}
+
+// ── Cards ─────────────────────────────────────────────────────────────────────
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-6;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 $spacing-8 $spacing-12;
+  width: 100%;
+  align-items: start;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    max-width: 440px;
+  }
+}
+
+.card {
+  background: $color-white;
+  border-radius: $radius-xl;
+  border: 1px solid $color-gray-200;
+  padding: $spacing-8;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+
+  &--pro {
+    border-color: $color-primary;
+    box-shadow: $shadow-lg;
+  }
+}
+
+.popularBadge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: $color-primary;
+  color: #ffffff;
+  font-size: $font-size-xs;
+  font-weight: 700;
+  padding: 4px $spacing-4;
+  border-radius: $radius-full;
+  white-space: nowrap;
+}
+
+.cardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.planName {
+  font-size: $font-size-xl;
+  font-weight: 700;
+  color: $color-gray-900;
+  margin: 0;
+}
+
+.priceRow {
+  @include flex(row, baseline, flex-start, $spacing-1);
+}
+
+.price {
+  font-size: $font-size-3xl;
+  font-weight: 800;
+  color: $color-gray-900;
+}
+
+.period {
+  font-size: $font-size-sm;
+  color: $color-gray-400;
+}
+
+.planDesc {
+  font-size: $font-size-sm;
+  color: $color-gray-500;
+  margin: 0;
+}
+
+.cardAction {
+  // container for the CTA button
+}
+
+.comingSoon {
+  padding: $spacing-3 $spacing-4;
+  background: $color-gray-100;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $color-gray-500;
+  text-align: center;
+  font-style: italic;
+}
+
+// ── Feature list ──────────────────────────────────────────────────────────────
+
+.featureList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+  border-top: 1px solid $color-gray-100;
+  padding-top: $spacing-6;
+}
+
+.featureItem {
+  @include flex(row, center, flex-start, $spacing-3);
+  font-size: $font-size-sm;
+  color: $color-gray-700;
+
+  &--disabled {
+    opacity: 0.4;
+  }
+}
+
+.check {
+  color: $color-success;
+  font-weight: 700;
+  flex-shrink: 0;
+  width: 16px;
+  text-align: center;
+}
+
+.cross {
+  color: $color-gray-300;
+  flex-shrink: 0;
+  width: 16px;
+  text-align: center;
+}
+
+.valueText {
+  color: $color-primary;
+  font-weight: 500;
+  font-size: $font-size-xs;
+  flex-shrink: 0;
+  width: 16px;
+  text-align: center;
+}
+
+// ── Footer ────────────────────────────────────────────────────────────────────
+
+.footer {
+  text-align: center;
+  padding: $spacing-8;
+  border-top: 1px solid $color-gray-200;
+  background: $color-white;
+  margin-top: auto;
+
+  p {
+    font-size: $font-size-sm;
+    color: $color-gray-500;
+    margin: 0;
+  }
+
+  a {
+    color: $color-primary;
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover { text-decoration: underline; }
+  }
+}
