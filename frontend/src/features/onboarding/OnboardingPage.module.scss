@@ -1,0 +1,180 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-gray-50;
+  @include flex-center;
+  padding: $spacing-8 $spacing-4;
+}
+
+.card {
+  background: $color-white;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-xl;
+  width: 100%;
+  max-width: 520px;
+  padding: $spacing-8;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: $spacing-8;
+}
+
+.brand {
+  @include flex(row, center, center, $spacing-2);
+  margin-bottom: $spacing-6;
+}
+
+.brand__icon {
+  font-size: 1.5rem;
+}
+
+.brand__name {
+  font-size: $font-size-xl;
+  font-weight: 700;
+  color: $color-gray-900;
+}
+
+.title {
+  font-size: $font-size-2xl;
+  font-weight: 700;
+  color: $color-gray-900;
+  margin: 0 0 $spacing-2;
+}
+
+.subtitle {
+  font-size: $font-size-sm;
+  color: $color-gray-500;
+  margin: 0 0 $spacing-6;
+}
+
+// ── Step indicator ────────────────────────────────────────────────────────────
+
+.stepIndicator {
+  @include flex(row, center, center, $spacing-2);
+}
+
+.stepDot {
+  width: 8px;
+  height: 8px;
+  border-radius: $radius-full;
+  background: $color-gray-200;
+  transition: background $transition-fast;
+
+  &--active {
+    background: $color-primary;
+    width: 24px;
+  }
+
+  &--done {
+    background: $color-success;
+  }
+}
+
+.stepLabel {
+  font-size: $font-size-xs;
+  color: $color-gray-400;
+  margin-left: $spacing-2;
+}
+
+// ── Step content ──────────────────────────────────────────────────────────────
+
+.stepContent {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+}
+
+.stepTitle {
+  font-size: $font-size-lg;
+  font-weight: 600;
+  color: $color-gray-800;
+  margin: 0;
+}
+
+.stepDescription {
+  font-size: $font-size-sm;
+  color: $color-gray-500;
+  margin: -$spacing-4 0 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+}
+
+.urlPreview {
+  font-size: $font-size-xs;
+  color: $color-gray-400;
+  background: $color-gray-50;
+  padding: $spacing-2 $spacing-3;
+  border-radius: $radius-md;
+  border: 1px solid $color-gray-200;
+  margin: -$spacing-2 0 0;
+
+  strong {
+    color: $color-primary;
+  }
+}
+
+// ── Invite rows ───────────────────────────────────────────────────────────────
+
+.inviteList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.inviteRow {
+  @include flex(row, center, flex-start, $spacing-2);
+}
+
+.inviteEmail {
+  flex: 1;
+}
+
+.inviteRole {
+  padding: $spacing-2 $spacing-3;
+  border: 1px solid $color-gray-300;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $color-gray-700;
+  background: $color-white;
+  cursor: pointer;
+  outline: none;
+  min-width: 140px;
+
+  &:focus {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 2px rgba($color-primary, 0.2);
+  }
+}
+
+.removeBtn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: $color-gray-400;
+  font-size: $font-size-lg;
+  border-radius: $radius-sm;
+  @include flex-center;
+  flex-shrink: 0;
+  transition: color $transition-fast, background $transition-fast;
+
+  &:hover {
+    color: $color-danger;
+    background: rgba($color-danger, 0.08);
+  }
+}
+
+// ── Actions ───────────────────────────────────────────────────────────────────
+
+.actions {
+  @include flex(row, center, flex-end, $spacing-3);
+  padding-top: $spacing-2;
+}
