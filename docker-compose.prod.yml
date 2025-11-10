@@ -1,0 +1,113 @@
+# docker-compose.prod.yml — Stack completo de producción en un solo host
+# Útil para testing de producción local o deploy en servidor único.
+# Para escalamiento real, despliega backend y frontend en servidores separados
+# usando sus Dockerfiles individuales.
+#
+# Uso:
+#   docker-compose -f docker-compose.prod.yml up -d
+#
+# Variables de entorno requeridas (crear .env en la raíz):
+#   DATABASE_URL, JWT_SECRET, JWT_REFRESH_SECRET
+#   ANTHROPIC_API_KEY (opcional), STRIPE_SECRET_KEY (opcional), etc.
+
+version: '3.9'
+
+services:
+  # ── Infraestructura ────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: scrumforge-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-scrumforge}
+      POSTGRES_USER: ${POSTGRES_USER:-scrumforge}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-scrumforge}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - internal
+
+  redis:
+    image: redis:7-alpine
+    container_name: scrumforge-redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - internal
+
+  # ── Backend ────────────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: scrumforge-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-scrumforge}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-scrumforge}
+    ports:
+      - '4000:4000'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://localhost:4000/health || exit 1']
+      interval: 30s
+      timeout: 10s
+      start_period: 30s
+      retries: 3
+    networks:
+      - internal
+      - public
+
+  # ── Frontend ───────────────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        VITE_GRAPHQL_URL: ${VITE_GRAPHQL_URL:-http://localhost:4000/graphql}
+        VITE_WS_URL: ${VITE_WS_URL:-ws://localhost:4000/graphql}
+        VITE_BACKEND_URL: ${VITE_BACKEND_URL:-http://localhost:4000}
+    container_name: scrumforge-frontend
+    restart: unless-stopped
+    ports:
+      - '80:80'
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://localhost:80/ || exit 1']
+      interval: 30s
+      timeout: 10s
+      start_period: 10s
+      retries: 3
+    networks:
+      - public
+
+networks:
+  internal:
+    driver: bridge
+    internal: true   # postgres y redis no expuestos al exterior
+  public:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:

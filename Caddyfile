@@ -1,0 +1,49 @@
+# Caddyfile — Reverse proxy con TLS automático para ScrumForge
+#
+# Caddy obtiene y renueva certificados Let's Encrypt de forma completamente
+# automática: no hace falta Certbot ni configurar renovaciones con cron.
+#
+# Requisitos previos:
+#  1. El dominio (DOMAIN) y el subdominio (api.DOMAIN) deben apuntar a la IP
+#     del servidor mediante registros DNS tipo A (o AAAA para IPv6).
+#  2. Los puertos 80 y 443 deben estar abiertos en el firewall del servidor.
+#  3. CADDY_EMAIL debe ser un email válido — Let's Encrypt lo usa para avisos
+#     de expiración como medida de seguridad (nunca se usa para spam).
+#
+# Variables de entorno utilizadas (definir en .env junto al docker-compose):
+#  DOMAIN       — dominio principal, ej. scrumforge.miempresa.com
+#  CADDY_EMAIL  — email para la cuenta de Let's Encrypt
+#
+# Uso:
+#   Ver docker-compose.caddy.yml para el stack completo.
+#   Arranque: docker compose -f docker-compose.caddy.yml up -d
+
+# ── Opciones globales ──────────────────────────────────────────────────────────
+{
+    # Email de contacto para la cuenta de Let's Encrypt.
+    # Let's Encrypt lo usa para notificar si el certificado está próximo a expirar.
+    email {$CADDY_EMAIL}
+}
+
+# ── Frontend (dominio raíz) ────────────────────────────────────────────────────
+# Sirve la SPA de React. Caddy obtiene automáticamente el certificado TLS y
+# redirige HTTP → HTTPS sin configuración adicional.
+{$DOMAIN} {
+    encode gzip
+
+    # Proxy hacia el contenedor del frontend (Nginx sirviendo los estáticos)
+    reverse_proxy frontend:80
+}
+
+# ── Backend API + WebSocket (subdominio api.) ──────────────────────────────────
+# Sirve el endpoint GraphQL (/graphql) y los webhooks (/webhooks/stripe, /auth/...).
+# Caddy gestiona automáticamente el upgrade de HTTP a WebSocket para las
+# suscripciones de graphql-ws — no requiere configuración extra.
+api.{$DOMAIN} {
+    encode gzip
+
+    # Proxy hacia el contenedor del backend (Apollo Server en Express)
+    # Caddy añade automáticamente X-Forwarded-Proto: https, que el backend
+    # necesita para funcionar en HTTPS_MODE=proxy.
+    reverse_proxy backend:4000
+}

@@ -1,0 +1,176 @@
+# docker-compose.caddy.yml — Stack de producción con Caddy como reverse proxy
+#
+# Diferencias respecto a docker-compose.prod.yml:
+#  - Caddy gestiona TLS (Let's Encrypt) automáticamente.
+#  - Solo Caddy expone los puertos 80 y 443 al exterior.
+#  - El backend y el frontend quedan en la red interna (sin puertos públicos).
+#  - El backend arranca con HTTPS_MODE=proxy para que la redirección HTTP→HTTPS
+#    y las cabeceras de seguridad funcionen correctamente.
+#
+# Variables de entorno requeridas (crear .env en la raíz del repositorio):
+#
+#   DOMAIN             — dominio principal, ej. scrumforge.miempresa.com
+#   CADDY_EMAIL        — email para la cuenta Let's Encrypt
+#   POSTGRES_PASSWORD  — contraseña de la base de datos
+#   JWT_SECRET         — secreto para firmar tokens JWT (mín. 32 chars)
+#   JWT_REFRESH_SECRET — secreto para los refresh tokens
+#
+# Variables opcionales (ver backend/.env.example):
+#   ANTHROPIC_API_KEY, STRIPE_SECRET_KEY, GOOGLE_CLIENT_ID, etc.
+#
+# Uso:
+#   docker compose -f docker-compose.caddy.yml up -d
+#   docker compose -f docker-compose.caddy.yml logs -f caddy
+#   docker compose -f docker-compose.caddy.yml down
+
+services:
+
+  # ── Infraestructura ──────────────────────────────────────────────────────────
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: scrumforge-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       ${POSTGRES_DB:-scrumforge}
+      POSTGRES_USER:     ${POSTGRES_USER:-scrumforge}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-scrumforge}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - internal
+
+  redis:
+    image: redis:7-alpine
+    container_name: scrumforge-redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - internal
+
+  # ── Backend ──────────────────────────────────────────────────────────────────
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: scrumforge-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      NODE_ENV:     production
+      PORT:         4000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-scrumforge}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-scrumforge}
+      REDIS_URL:    redis://redis:6379
+      # proxy: el backend confía en X-Forwarded-Proto que Caddy añade automáticamente
+      # y redirige cualquier petición HTTP plana a HTTPS con 301.
+      HTTPS_MODE:   proxy
+      # La URL pública del backend — usada para los callbacks de OAuth y los
+      # enlaces de email de verificación/reset de contraseña.
+      BACKEND_URL:  https://api.${DOMAIN:?DOMAIN is required}
+      FRONTEND_URL: https://${DOMAIN}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://localhost:4000/health || exit 1']
+      interval: 30s
+      timeout: 10s
+      start_period: 30s
+      retries: 3
+    # Sin 'ports': el backend NO está expuesto directamente al exterior.
+    # Solo Caddy puede alcanzarlo a través de la red interna.
+    networks:
+      - internal
+
+  # ── Frontend ─────────────────────────────────────────────────────────────────
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        VITE_GRAPHQL_URL: https://api.${DOMAIN:?DOMAIN is required}/graphql
+        VITE_WS_URL:      wss://api.${DOMAIN}/graphql
+        VITE_BACKEND_URL: https://api.${DOMAIN}
+    container_name: scrumforge-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://localhost:80/ || exit 1']
+      interval: 30s
+      timeout: 10s
+      start_period: 10s
+      retries: 3
+    # Sin 'ports': el frontend NO está expuesto directamente al exterior.
+    # Solo Caddy puede alcanzarlo a través de la red interna.
+    networks:
+      - internal
+
+  # ── Caddy — reverse proxy + TLS automático ───────────────────────────────────
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: scrumforge-caddy
+    restart: unless-stopped
+    ports:
+      # Solo Caddy expone los puertos públicos.
+      # 80  — HTTP (Caddy redirige automáticamente a HTTPS)
+      # 443 — HTTPS con certificado Let's Encrypt
+      - '80:80'
+      - '443:443'
+      # Puerto UDP para HTTP/3 (QUIC) — mejora rendimiento en conexiones modernas
+      - '443:443/udp'
+    volumes:
+      # Caddyfile con la configuración del servidor
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      # Volumen persistente para los certificados TLS y datos de Caddy.
+      # IMPORTANTE: este volumen debe persistir entre reinicios del contenedor.
+      # Si se pierde, Caddy solicitará nuevos certificados a Let's Encrypt
+      # y podría alcanzar los límites de emisión (50 certs/dominio/semana).
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      # Variables leídas desde el Caddyfile con la sintaxis {$VARIABLE}
+      DOMAIN:      ${DOMAIN:?DOMAIN is required}
+      CADDY_EMAIL: ${CADDY_EMAIL:?CADDY_EMAIL is required}
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      # Caddy necesita estar en ambas redes:
+      # - internal: para hacer proxy hacia backend y frontend
+      # - public:   para recibir peticiones del exterior (puertos 80/443)
+      - internal
+      - public
+
+networks:
+  internal:
+    driver: bridge
+    internal: true   # postgres, redis, backend y frontend no expuestos al exterior
+  public:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  # Persistir certificados TLS de Caddy — crítico para no agotar el rate limit
+  # de Let's Encrypt (máx. 50 certificados por dominio por semana).
+  caddy_data:
+  caddy_config:
