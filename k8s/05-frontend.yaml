@@ -1,0 +1,108 @@
+# ── Frontend (React + Vite + nginx) ────────────────────────────────────────────
+# IMPORTANTE — URLs horneadas en build time:
+# Las variables VITE_* se incluyen en el bundle estático durante `docker build`.
+# En Kubernetes debes construir la imagen con los --build-arg correctos ANTES
+# de hacer push al registro y actualizar este Deployment.
+#
+# Ejemplo de build para producción:
+#   docker build \
+#     --build-arg VITE_GRAPHQL_URL=https://api.tudominio.com/graphql \
+#     --build-arg VITE_WS_URL=wss://api.tudominio.com/graphql \
+#     --build-arg VITE_BACKEND_URL=https://api.tudominio.com \
+#     --build-arg VITE_ENABLED_EXTENSIONS=planning-poker,ai,wiki \
+#     -f frontend/Dockerfile \
+#     -t your-registry/scrumforge-frontend:1.0.0 .
+#   docker push your-registry/scrumforge-frontend:1.0.0
+#
+# Actualiza el campo `image` de este Deployment con el tag recién publicado.
+# ─────────────────────────────────────────────────────────────────────────────
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scrumforge-frontend
+  namespace: scrumforge
+  labels:
+    app: scrumforge-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: scrumforge-frontend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: scrumforge-frontend
+    spec:
+      containers:
+        - name: frontend
+          # Construir y hacer push de la imagen con los VITE_* correctos (ver arriba)
+          image: your-registry/scrumforge-frontend:latest
+          ports:
+            - containerPort: 80
+              name: http
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: scrumforge-frontend
+  namespace: scrumforge
+  labels:
+    app: scrumforge-frontend
+spec:
+  selector:
+    app: scrumforge-frontend
+  ports:
+    - port: 80
+      targetPort: 80
+      name: http
+  type: ClusterIP
+
+---
+
+# HPA para el frontend — nginx es muy eficiente; 5 réplicas es más que suficiente
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: scrumforge-frontend
+  namespace: scrumforge
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: scrumforge-frontend
+  minReplicas: 2
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70

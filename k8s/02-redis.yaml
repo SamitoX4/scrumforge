@@ -1,0 +1,81 @@
+# ── Redis ──────────────────────────────────────────────────────────────────────
+# Redis se usa exclusivamente para rate limiting compartido entre réplicas.
+# Si solo despliegas una réplica del backend puedes eliminar este archivo
+# y omitir REDIS_URL en el Secret del backend — el fallback en memoria funciona.
+#
+# Para producción con múltiples réplicas se recomienda un servicio gestionado
+# (AWS ElastiCache, Google Memorystore, Azure Cache for Redis) en lugar de este
+# despliegue en-clúster. Si lo usas externo, elimina este archivo y actualiza
+# REDIS_URL en el Secret del backend.
+# ─────────────────────────────────────────────────────────────────────────────
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: scrumforge
+  labels:
+    app: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:7-alpine
+          ports:
+            - containerPort: 6379
+              name: redis
+          # Solo caché no persistente — si el pod muere los contadores se
+          # reinician (aceptable para rate limiting)
+          command:
+            - redis-server
+            - --save
+            - ""          # deshabilitar RDB snapshots
+            - --appendonly
+            - "no"        # deshabilitar AOF
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          livenessProbe:
+            exec:
+              command:
+                - redis-cli
+                - ping
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command:
+                - redis-cli
+                - ping
+            initialDelaySeconds: 5
+            periodSeconds: 5
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: scrumforge
+  labels:
+    app: redis
+spec:
+  selector:
+    app: redis
+  ports:
+    - port: 6379
+      targetPort: 6379
+      name: redis
+  type: ClusterIP

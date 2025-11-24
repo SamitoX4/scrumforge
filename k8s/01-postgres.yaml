@@ -1,0 +1,123 @@
+# ── PostgreSQL ─────────────────────────────────────────────────────────────────
+# Para producción se recomienda un servicio gestionado externo
+# (AWS RDS, Google Cloud SQL, Azure Database for PostgreSQL) en lugar de este
+# despliegue en-clúster. Si usas un servicio externo, elimina este archivo y
+# actualiza DATABASE_URL en el Secret del backend (04-backend.yaml).
+#
+# IMPORTANTE: El PVC usa ReadWriteOnce — usa strategy Recreate para evitar que
+# dos pods intenten montar el mismo volumen simultáneamente.
+# ─────────────────────────────────────────────────────────────────────────────
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  namespace: scrumforge
+  labels:
+    app: postgres
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  # storageClassName: standard   # Descomentar y ajustar según tu cloud provider
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-secret
+  namespace: scrumforge
+  labels:
+    app: postgres
+type: Opaque
+# stringData evita tener que codificar en base64 manualmente
+# IMPORTANTE: Cambia estos valores antes de aplicar en producción
+stringData:
+  POSTGRES_USER: scrumforge
+  POSTGRES_PASSWORD: "CAMBIAR_POR_CONTRASEÑA_SEGURA"
+  POSTGRES_DB: scrumforge
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: scrumforge
+  labels:
+    app: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  # Recreate: necesario con ReadWriteOnce — evita que dos pods monten el PVC
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          ports:
+            - containerPort: 5432
+              name: postgres
+          envFrom:
+            - secretRef:
+                name: postgres-secret
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+              subPath: pgdata    # subPath evita el directorio lost+found en ext4
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          livenessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - scrumforge
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 5
+          readinessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - scrumforge
+            initialDelaySeconds: 5
+            periodSeconds: 5
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: postgres-pvc
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: scrumforge
+  labels:
+    app: postgres
+spec:
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
+      targetPort: 5432
+      name: postgres
+  type: ClusterIP

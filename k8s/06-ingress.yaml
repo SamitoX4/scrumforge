@@ -1,0 +1,77 @@
+# ── Ingress con TLS automático (cert-manager + Let's Encrypt) ──────────────────
+# Requisitos:
+#   1. nginx Ingress Controller instalado:
+#        kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.0/deploy/static/provider/cloud/deploy.yaml
+#
+#   2. cert-manager instalado:
+#        kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.4/cert-manager.yaml
+#
+#   3. ClusterIssuer creado (ver 06b-cluster-issuer.yaml que se crea junto a este archivo)
+#
+#   4. DNS apuntando a la IP del Ingress Controller:
+#        tudominio.com       → LOAD_BALANCER_IP
+#        api.tudominio.com   → LOAD_BALANCER_IP
+#
+# Obtener la IP del Ingress Controller:
+#   kubectl get svc -n ingress-nginx ingress-nginx-controller
+#
+# WebSocket (graphql-ws):
+#   Las anotaciones de timeout y upgrade son necesarias para que las
+#   suscripciones GraphQL en tiempo real funcionen correctamente.
+# ─────────────────────────────────────────────────────────────────────────────
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: scrumforge
+  namespace: scrumforge
+  labels:
+    app: scrumforge
+  annotations:
+    # TLS automático via cert-manager
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+
+    # nginx — WebSocket support (graphql-ws subscriptions)
+    nginx.ingress.kubernetes.io/proxy-http-version: "1.1"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "Upgrade";
+
+    # nginx — límite de tamaño de body (para uploads futuros)
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+
+    # Forzar HTTPS — redirige HTTP → HTTPS con 308
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - tudominio.com
+        - api.tudominio.com
+      secretName: scrumforge-tls    # cert-manager crea este Secret automáticamente
+  rules:
+    # Frontend
+    - host: tudominio.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: scrumforge-frontend
+                port:
+                  name: http
+
+    # Backend API + WebSocket
+    - host: api.tudominio.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: scrumforge-backend
+                port:
+                  name: http

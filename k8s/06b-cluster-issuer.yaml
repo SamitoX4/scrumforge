@@ -1,0 +1,44 @@
+# ── cert-manager ClusterIssuer ─────────────────────────────────────────────────
+# Aplica este archivo UNA SOLA VEZ después de instalar cert-manager.
+# Cambia `email` por tu dirección real de Let's Encrypt.
+#
+# Versión staging (para pruebas — no consume el rate limit de Let's Encrypt):
+#   server: https://acme-staging-v02.api.letsencrypt.org/directory
+#
+# Versión producción (certificados confiables):
+#   server: https://acme-v02.api.letsencrypt.org/directory
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Staging — usar primero para verificar que todo funciona
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+spec:
+  acme:
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: raulbengalysamameascorbe@gmail.com
+    privateKeySecretRef:
+      name: letsencrypt-staging-key
+    solvers:
+      - http01:
+          ingress:
+            ingressClassName: nginx
+
+---
+
+# Producción — usar cuando el staging funcione correctamente
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: raulbengalysamameascorbe@gmail.com
+    privateKeySecretRef:
+      name: letsencrypt-prod-key
+    solvers:
+      - http01:
+          ingress:
+            ingressClassName: nginx
