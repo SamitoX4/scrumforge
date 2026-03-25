@@ -72,6 +72,20 @@ const EXTENSION_LOADERS: Record<string, () => Promise<Record<string, unknown>>> 
  * await loadFrontendExtensions();
  * ReactDOM.createRoot(document.getElementById('root')!).render(<App />);
  */
+/**
+ * Checks whether a named extension is enabled for this deployment.
+ *
+ * Rules mirror those in `loadFrontendExtensions`:
+ *   - `VITE_ENABLED_EXTENSIONS` not set → all extensions enabled (dev/monorepo)
+ *   - `VITE_ENABLED_EXTENSIONS=""` → no extensions enabled
+ *   - `VITE_ENABLED_EXTENSIONS="wiki,ai"` → only listed extensions
+ */
+export function isExtensionEnabled(name: string): boolean {
+  const raw = import.meta.env.VITE_ENABLED_EXTENSIONS as string | undefined;
+  if (raw === undefined) return true;
+  return raw.split(',').map((s) => s.trim()).includes(name);
+}
+
 export async function loadFrontendExtensions(): Promise<void> {
   const raw = (import.meta.env.VITE_ENABLED_EXTENSIONS as string | undefined);
 

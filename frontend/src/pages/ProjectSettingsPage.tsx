@@ -26,6 +26,7 @@ import {
   GITHUB_ACTIVITY,
   LINK_GITHUB_REPO,
 } from '@/graphql/integrations/integrations.queries';
+import { isExtensionEnabled } from '@/extensions/load-extensions';
 import { useCurrentProject } from '@/hooks/useCurrentProject';
 import { Spinner } from '@/components/atoms/Spinner/Spinner';
 import { Button } from '@/components/atoms/Button/Button';
@@ -186,10 +187,12 @@ export default function ProjectSettingsPage() {
   /** Indica si el repositorio fue guardado exitosamente en esta sesión. */
   const [githubSaved, setGithubSaved] = useState(false);
 
+  const integrationsEnabled = isExtensionEnabled('integrations');
+
   /** Datos del repositorio GitHub actualmente vinculado al proyecto (puede ser null). */
   const { data: linkedRepoData } = useQuery<{ githubLinkedRepo: string | null }>(
     GITHUB_LINKED_REPO,
-    { variables: { projectId }, skip: !projectId },
+    { variables: { projectId }, skip: !projectId || !integrationsEnabled },
   );
 
   /**
@@ -201,7 +204,7 @@ export default function ProjectSettingsPage() {
     githubActivity: { sha: string; message: string; author: string; date: string; url: string }[];
   }>(
     GITHUB_ACTIVITY,
-    { variables: { projectId }, skip: !projectId || !linkedRepoData?.githubLinkedRepo },
+    { variables: { projectId }, skip: !projectId || !integrationsEnabled || !linkedRepoData?.githubLinkedRepo },
   );
 
   const [linkGithubRepo, { loading: linkingRepo }] = useMutation<any>(LINK_GITHUB_REPO, {
@@ -373,8 +376,8 @@ export default function ProjectSettingsPage() {
         </Button>
       </section>
 
-      {/* Sección: Integración con GitHub */}
-      <section className={styles.section}>
+      {/* Sección: Integración con GitHub — solo cuando la extensión integrations está activa */}
+      {integrationsEnabled && <section className={styles.section}>
         <h2 className={styles.sectionTitle}>{t('settings.github')}</h2>
 
         {/* Mostrar el repo vinculado actual si existe, como referencia antes de cambiar */}
@@ -494,7 +497,7 @@ export default function ProjectSettingsPage() {
             )}
           </div>
         )}
-      </section>
+      </section>}
 
       {/* Sección: Zona de peligro — acciones destructivas e irreversibles */}
       <section className={styles.dangerSection}>
