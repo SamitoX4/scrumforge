@@ -4,6 +4,7 @@
   "description": "ScrumForge API — Apollo Server + GraphQL + Prisma",
   "main": "dist/main.js",
   "scripts": {
+    "postinstall": "prisma generate --schema=src/config/db/schema.prisma",
     "dev": "tsx watch src/main.ts",
     "build": "tsc",
     "start": "node dist/main.js",
