@@ -27,7 +27,7 @@
   "keywords": ["scrumforge", "extensions", "sdk", "frontend"],
   "repository": {
     "type": "git",
-    "url": "https://github.com/tu-org/scrumforge.git",
+    "url": "https://github.com/SamitoX4/scrumforge.git",
     "directory": "packages/frontend-sdk"
   }
 }

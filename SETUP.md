@@ -335,8 +335,8 @@ carpeta-de-trabajo/
 ```
 
 ```bash
-git clone https://github.com/tu-org/scrumforge.git
-git clone https://github.com/tu-org/scrumforge-extensions.git
+git clone https://github.com/SamitoX4/scrumforge.git
+git clone https://github.com/SamitoX4/scrumforge-extensions.git
 ```
 
 #### Instalar extensiones del backend (referencias locales)

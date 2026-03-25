@@ -64,7 +64,7 @@ ScrumForge es una plataforma SaaS multi-tenant de gestión ágil que permite a c
 
 ```bash
 # 1. Clonar
-git clone https://github.com/tu-org/scrumforge.git && cd scrumforge
+git clone https://github.com/SamitoX4/scrumforge.git && cd scrumforge
 
 # 2. Infraestructura (PostgreSQL + Redis)
 docker compose up -d
