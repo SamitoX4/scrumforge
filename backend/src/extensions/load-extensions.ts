@@ -46,12 +46,15 @@ export async function loadExtensions(): Promise<void> {
  *   '@scope/package-name'   → import desde node_modules (producción)
  */
 const EXTENSION_MAP: Record<string, string> = {
-  'planning-poker':        'local:./planning-poker',
-  'ai':                    'local:./ai',
-  'integrations':          'local:./integrations',
-  'advanced-reports':      'local:./advanced-reports',
-  'retrospective-premium': 'local:./retrospective-premium',
-  'wiki':                  'local:./wiki',
+  // Extensiones premium — el cliente coloca los paquetes compilados en backend/extensions/
+  // Ejemplo: descomprimir planning-poker.zip → backend/extensions/planning-poker/
+  'planning-poker':        'local:../../extensions/planning-poker',
+  'ai':                    'local:../../extensions/ai',
+  'integrations':          'local:../../extensions/integrations',
+  'advanced-reports':      'local:../../extensions/advanced-reports',
+  'retrospective-premium': 'local:../../extensions/retrospective-premium',
+  'wiki':                  'local:../../extensions/wiki',
+  // Billing — incluida en el repo, gestionada por el operador de ScrumForge
   'billing-stripe':        'local:./billing-stripe',
 };
 

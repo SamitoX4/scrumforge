@@ -35,12 +35,21 @@ import type { ScrumForgeFrontendExtension } from './extension-registry';
  *   3. Asegúrate de que el módulo exporte `default` o `<camelCase>UiExtension`.
  */
 const EXTENSION_LOADERS: Record<string, () => Promise<Record<string, unknown>>> = {
-  'planning-poker':        () => import('./planning-poker'),
-  'wiki':                  () => import('./wiki'),
-  'retrospective-premium': () => import('./retrospective-premium'),
-  'advanced-reports':      () => import('./advanced-reports'),
-  'ai':                    () => import('./ai'),
-  'integrations':          () => import('./integrations'),
+  // Extensiones premium — el cliente coloca los paquetes en frontend/extensions/
+  // /* @vite-ignore */ evita que Vite falle al compilar si la carpeta no existe
+  // @ts-ignore
+  'planning-poker':        () => import(/* @vite-ignore */ '../../extensions/planning-poker'),
+  // @ts-ignore
+  'wiki':                  () => import(/* @vite-ignore */ '../../extensions/wiki'),
+  // @ts-ignore
+  'retrospective-premium': () => import(/* @vite-ignore */ '../../extensions/retrospective-premium'),
+  // @ts-ignore
+  'advanced-reports':      () => import(/* @vite-ignore */ '../../extensions/advanced-reports'),
+  // @ts-ignore
+  'ai':                    () => import(/* @vite-ignore */ '../../extensions/ai'),
+  // @ts-ignore
+  'integrations':          () => import(/* @vite-ignore */ '../../extensions/integrations'),
+  // Billing — incluida en el repo, gestionada por el operador de ScrumForge
   'billing-stripe':        () => import('./billing-stripe'),
 };
 

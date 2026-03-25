@@ -32,6 +32,10 @@ coverage/
 # ── TypeScript build info ─────────────────────────────────────────────────────
 *.tsbuildinfo
 
+# ── Premium extensions (downloaded from portal, not in repo) ──────────────────
+backend/extensions/*/
+frontend/extensions/*/
+
 # ── Database ──────────────────────────────────────────────────────────────────
 *.db
 *.db-journal
