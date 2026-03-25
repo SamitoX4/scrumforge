@@ -34,6 +34,7 @@
     "@scrumforge/backend-ext-retrospective-premium": "file:../../scrumforge-extensions/packages/backend-ext-retrospective-premium",
     "@scrumforge/backend-ext-wiki": "file:../../scrumforge-extensions/packages/backend-ext-wiki",
     "@scrumforge/backend-sdk": "file:../packages/backend-sdk",
+    "@scrumforge/sdk": "file:../packages/backend-sdk",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",

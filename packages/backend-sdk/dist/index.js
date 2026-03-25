@@ -1,25 +1,31 @@
 'use strict';
 /**
- * packages/backend-sdk/dist/index.js — Production shim
+ * packages/backend-sdk/dist/index.js — Universal shim (dev + prod)
  *
- * When premium extension packages (installed via npm) call
- * require('@scrumforge/backend-sdk'), this file is loaded inside the running
- * backend process. It re-exports from the compiled backend modules so
- * extensions get the same live instances (prisma, pubsub, etc.) as the core.
+ * Resolution strategy:
+ *   Production (node dist/main.js): ../../backend/dist/ exists → use compiled JS
+ *   Development (tsx watch):        ../../backend/dist/ missing → fall back to ../../backend/src/ (tsx handles .ts)
  *
  * Paths are relative to this file's real location:
  *   /app/packages/backend-sdk/dist/index.js
- *   →  ../../backend/dist/  =  /app/backend/dist/
  */
 
-const auth        = require('../../backend/dist/middleware/auth.middleware');
-const plan        = require('../../backend/dist/services/plan.service');
-const reports     = require('../../backend/dist/modules/reports/reports.service');
-const retro       = require('../../backend/dist/modules/retrospective/retro.service');
-const pubsubMod   = require('../../backend/dist/realtime/pubsub');
-const errors      = require('../../backend/dist/utils/error.utils');
-const sanitize    = require('../../backend/dist/utils/sanitize.utils');
-const extTypes    = require('../../backend/dist/extensions/types');
+function load(distPath, srcPath) {
+  try {
+    return require(distPath);
+  } catch {
+    return require(srcPath);
+  }
+}
+
+const auth      = load('../../backend/dist/middleware/auth.middleware',           '../../backend/src/middleware/auth.middleware');
+const plan      = load('../../backend/dist/services/plan.service',                '../../backend/src/services/plan.service');
+const reports   = load('../../backend/dist/modules/reports/reports.service',      '../../backend/src/modules/reports/reports.service');
+const retro     = load('../../backend/dist/modules/retrospective/retro.service',  '../../backend/src/modules/retrospective/retro.service');
+const pubsubMod = load('../../backend/dist/realtime/pubsub',                      '../../backend/src/realtime/pubsub');
+const errors    = load('../../backend/dist/utils/error.utils',                    '../../backend/src/utils/error.utils');
+const sanitize  = load('../../backend/dist/utils/sanitize.utils',                 '../../backend/src/utils/sanitize.utils');
+const extTypes  = load('../../backend/dist/extensions/types',                     '../../backend/src/extensions/types');
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
@@ -32,12 +38,12 @@ exports.ReportsService = reports.ReportsService;
 exports.RetroService   = retro.RetroService;
 
 // ─── Realtime ─────────────────────────────────────────────────────────────────
-exports.pubsub                        = pubsubMod.pubsub;
-exports.BOARD_UPDATED_CHANNEL         = pubsubMod.BOARD_UPDATED_CHANNEL;
-exports.NOTIFICATION_ADDED_CHANNEL    = pubsubMod.NOTIFICATION_ADDED_CHANNEL;
+exports.pubsub                          = pubsubMod.pubsub;
+exports.BOARD_UPDATED_CHANNEL           = pubsubMod.BOARD_UPDATED_CHANNEL;
+exports.NOTIFICATION_ADDED_CHANNEL      = pubsubMod.NOTIFICATION_ADDED_CHANNEL;
 exports.SPRINT_BURNDOWN_UPDATED_CHANNEL = pubsubMod.SPRINT_BURNDOWN_UPDATED_CHANNEL;
-exports.POKER_SESSION_UPDATED_CHANNEL = pubsubMod.POKER_SESSION_UPDATED_CHANNEL;
-exports.RETRO_UPDATED_CHANNEL         = pubsubMod.RETRO_UPDATED_CHANNEL;
+exports.POKER_SESSION_UPDATED_CHANNEL   = pubsubMod.POKER_SESSION_UPDATED_CHANNEL;
+exports.RETRO_UPDATED_CHANNEL           = pubsubMod.RETRO_UPDATED_CHANNEL;
 
 // ─── Errors ───────────────────────────────────────────────────────────────────
 exports.AppError          = errors.AppError;
@@ -49,8 +55,8 @@ exports.ConflictError     = errors.ConflictError;
 exports.toGraphQLError    = errors.toGraphQLError;
 
 // ─── Sanitize ─────────────────────────────────────────────────────────────────
-exports.sanitizeString    = sanitize.sanitizeString;
-exports.limitLength       = sanitize.limitLength;
+exports.sanitizeString     = sanitize.sanitizeString;
+exports.limitLength        = sanitize.limitLength;
 exports.sanitizeWebhookUrl = sanitize.sanitizeWebhookUrl;
 
 // ─── Extension types (EventType is a runtime enum) ────────────────────────────

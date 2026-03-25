@@ -46,13 +46,13 @@ export async function loadExtensions(): Promise<void> {
  *   '@scope/package-name'   → import desde node_modules (producción)
  */
 const EXTENSION_MAP: Record<string, string> = {
-  'planning-poker':        '@scrumforge/backend-ext-planning-poker',
-  'ai':                    '@scrumforge/backend-ext-ai',
-  'integrations':          '@scrumforge/backend-ext-integrations',
-  'advanced-reports':      '@scrumforge/backend-ext-advanced-reports',
-  'retrospective-premium': '@scrumforge/backend-ext-retrospective-premium',
-  'wiki':                  '@scrumforge/backend-ext-wiki',
-  'billing-stripe':        '@scrumforge/backend-ext-billing-stripe',
+  'planning-poker':        'local:./planning-poker',
+  'ai':                    'local:./ai',
+  'integrations':          'local:./integrations',
+  'advanced-reports':      'local:./advanced-reports',
+  'retrospective-premium': 'local:./retrospective-premium',
+  'wiki':                  'local:./wiki',
+  'billing-stripe':        'local:./billing-stripe',
 };
 
 async function loadExtension(name: string): Promise<void> {
