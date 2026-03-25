@@ -35,20 +35,16 @@ import type { ScrumForgeFrontendExtension } from './extension-registry';
  *   3. Asegúrate de que el módulo exporte `default` o `<camelCase>UiExtension`.
  */
 const EXTENSION_LOADERS: Record<string, () => Promise<Record<string, unknown>>> = {
-  // Extensiones premium — el cliente coloca los paquetes en frontend/extensions/
-  // /* @vite-ignore */ evita que Vite falle al compilar si la carpeta no existe
-  // @ts-ignore
-  'planning-poker':        () => import(/* @vite-ignore */ '../../extensions/planning-poker'),
-  // @ts-ignore
-  'wiki':                  () => import(/* @vite-ignore */ '../../extensions/wiki'),
-  // @ts-ignore
-  'retrospective-premium': () => import(/* @vite-ignore */ '../../extensions/retrospective-premium'),
-  // @ts-ignore
-  'advanced-reports':      () => import(/* @vite-ignore */ '../../extensions/advanced-reports'),
-  // @ts-ignore
-  'ai':                    () => import(/* @vite-ignore */ '../../extensions/ai'),
-  // @ts-ignore
-  'integrations':          () => import(/* @vite-ignore */ '../../extensions/integrations'),
+  // Los aliases @scrumforge/frontend-ext-* se resuelven en vite.config.ts:
+  //   1. frontend/extensions/<name>/  (paquete descargado del portal)
+  //   2. ../../scrumforge-extensions/packages/frontend-ext-<name>/  (dev monorepo)
+  //   3. src/extensions/_stub.ts      (stub vacío — extensión no instalada)
+  'planning-poker':        () => import('@scrumforge/frontend-ext-planning-poker'),
+  'wiki':                  () => import('@scrumforge/frontend-ext-wiki'),
+  'retrospective-premium': () => import('@scrumforge/frontend-ext-retrospective-premium'),
+  'advanced-reports':      () => import('@scrumforge/frontend-ext-advanced-reports'),
+  'ai':                    () => import('@scrumforge/frontend-ext-ai'),
+  'integrations':          () => import('@scrumforge/frontend-ext-integrations'),
   // Billing — incluida en el repo, gestionada por el operador de ScrumForge
   'billing-stripe':        () => import('./billing-stripe'),
 };
