@@ -32,6 +32,12 @@ coverage/
 # ── TypeScript build info ─────────────────────────────────────────────────────
 *.tsbuildinfo
 
+# ── Database ──────────────────────────────────────────────────────────────────
+*.db
+*.db-journal
+*.db-wal
+backend/src/config/db/src/
+
 # ── OS / Editor ───────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
