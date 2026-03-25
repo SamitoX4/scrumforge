@@ -29,7 +29,6 @@ import { configurePassport } from "./config/passport";
 import { signAccessToken, signRefreshToken } from "./utils/crypto.utils";
 import { prisma } from "./config/db/prisma.client";
 import { logger } from "./utils/logger";
-import { BillingService } from "./extensions/billing-stripe/billing.service";
 
 /**
  * Crea y configura la aplicación Express completa.
@@ -142,14 +141,14 @@ export async function createApp(schema: GraphQLSchema = executableSchema): Promi
   });
 
   // ── Stripe Webhook (DEBE ir antes de express.json()) ──────────────────────
-  // Stripe firma el body de sus webhooks usando HMAC-SHA256. La verificación
-  // de la firma requiere el body RAW (Buffer), no el objeto JSON parseado.
-  // Por eso se usa express.raw() aquí, antes de que express.json() lo transforme.
+  // Solo activo si la extensión billing-stripe está instalada en backend/extensions/
+  // Stripe firma el body con HMAC-SHA256 — requiere el body RAW (Buffer).
   app.post('/webhooks/stripe', express.raw({ type: 'application/json' }), async (req, res) => {
     const sig = req.headers['stripe-signature'] as string;
     try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const { BillingService } = require('../../extensions/billing-stripe/billing.service') as typeof import('../../extensions/billing-stripe/billing.service');
       const billingService = new BillingService(prisma);
-      // handleWebhook verifica la firma de Stripe y procesa el evento
       await billingService.handleWebhook(req.body as Buffer, sig);
       res.json({ received: true });
     } catch (err) {

@@ -45,8 +45,7 @@ const EXTENSION_LOADERS: Record<string, () => Promise<Record<string, unknown>>> 
   'advanced-reports':      () => import('@scrumforge/frontend-ext-advanced-reports'),
   'ai':                    () => import('@scrumforge/frontend-ext-ai'),
   'integrations':          () => import('@scrumforge/frontend-ext-integrations'),
-  // Billing — incluida en el repo, gestionada por el operador de ScrumForge
-  'billing-stripe':        () => import('./billing-stripe'),
+  'billing-stripe':        () => import('@scrumforge/frontend-ext-billing-stripe'),
 };
 
 /**

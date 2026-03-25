@@ -54,8 +54,7 @@ const EXTENSION_MAP: Record<string, string> = {
   'advanced-reports':      'local:../../extensions/advanced-reports',
   'retrospective-premium': 'local:../../extensions/retrospective-premium',
   'wiki':                  'local:../../extensions/wiki',
-  // Billing — incluida en el repo, gestionada por el operador de ScrumForge
-  'billing-stripe':        'local:./billing-stripe',
+  'billing-stripe':        'local:../../extensions/billing-stripe',
 };
 
 async function loadExtension(name: string): Promise<void> {
