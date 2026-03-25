@@ -23,33 +23,6 @@ importers:
       '@prisma/client':
         specifier: ^7.5.0
         version: 7.5.0(prisma@7.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3)
-      '@scrumforge/backend-ext-advanced-reports':
-        specifier: file:../../scrumforge-extensions/packages/backend-ext-advanced-reports
-        version: file:../../scrumforge-extensions/packages/backend-ext-advanced-reports(@prisma/client@7.5.0(prisma@7.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3))(@scrumforge/backend-sdk@file:../packages/backend-sdk)(graphql-subscriptions@3.0.0(graphql@16.13.1))(graphql@16.13.1)
-      '@scrumforge/backend-ext-ai':
-        specifier: file:../../scrumforge-extensions/packages/backend-ext-ai
-        version: file:../../scrumforge-extensions/packages/backend-ext-ai(@prisma/client@7.5.0(prisma@7.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3))(@scrumforge/backend-sdk@file:../packages/backend-sdk)(graphql-subscriptions@3.0.0(graphql@16.13.1))(graphql@16.13.1)
-      '@scrumforge/backend-ext-billing-stripe':
-        specifier: file:../../scrumforge-extensions/packages/backend-ext-billing-stripe
-        version: file:../../scrumforge-extensions/packages/backend-ext-billing-stripe(@prisma/client@7.5.0(prisma@7.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3))(@scrumforge/backend-sdk@file:../packages/backend-sdk)(@types/node@25.5.0)(graphql-subscriptions@3.0.0(graphql@16.13.1))(graphql@16.13.1)
-      '@scrumforge/backend-ext-integrations':
-        specifier: file:../../scrumforge-extensions/packages/backend-ext-integrations
-        version: file:../../scrumforge-extensions/packages/backend-ext-integrations(@prisma/client@7.5.0(prisma@7.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3))(@scrumforge/backend-sdk@file:../packages/backend-sdk)(graphql-subscriptions@3.0.0(graphql@16.13.1))(graphql@16.13.1)
-      '@scrumforge/backend-ext-planning-poker':
-        specifier: file:../../scrumforge-extensions/packages/backend-ext-planning-poker
-        version: file:../../scrumforge-extensions/packages/backend-ext-planning-poker(@prisma/client@7.5.0(prisma@7.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3))(@scrumforge/backend-sdk@file:../packages/backend-sdk)(graphql-subscriptions@3.0.0(graphql@16.13.1))(graphql@16.13.1)
-      '@scrumforge/backend-ext-retrospective-premium':
-        specifier: file:../../scrumforge-extensions/packages/backend-ext-retrospective-premium
-        version: file:../../scrumforge-extensions/packages/backend-ext-retrospective-premium(@prisma/client@7.5.0(prisma@7.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3))(@scrumforge/backend-sdk@file:../packages/backend-sdk)(graphql-subscriptions@3.0.0(graphql@16.13.1))(graphql@16.13.1)
-      '@scrumforge/backend-ext-wiki':
-        specifier: file:../../scrumforge-extensions/packages/backend-ext-wiki
-        version: file:../../scrumforge-extensions/packages/backend-ext-wiki(@prisma/client@7.5.0(prisma@7.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3))(@scrumforge/backend-sdk@file:../packages/backend-sdk)(graphql-subscriptions@3.0.0(graphql@16.13.1))(graphql@16.13.1)
-      '@scrumforge/backend-sdk':
-        specifier: file:../packages/backend-sdk
-        version: file:../packages/backend-sdk
-      '@scrumforge/sdk':
-        specifier: file:../packages/backend-sdk
-        version: '@scrumforge/backend-sdk@file:../packages/backend-sdk'
       bcryptjs:
         specifier: ^3.0.3
         version: 3.0.3
@@ -947,65 +920,6 @@ packages:
     resolution: {integrity: sha512-c1Q99M5ljsIuc4YdaCwfUEXsofakb9c8+Zse2qxTadu8TalLXuAESzLvFAvNVbkmSlvlzIQOLpBCmWI9wTOt+g==}
     peerDependencies:
       '@redis/client': ^1.0.0
-
-  '@scrumforge/backend-ext-advanced-reports@file:../../scrumforge-extensions/packages/backend-ext-advanced-reports':
-    resolution: {directory: ../../scrumforge-extensions/packages/backend-ext-advanced-reports, type: directory}
-    peerDependencies:
-      '@prisma/client': ^7.0.0
-      '@scrumforge/sdk': ^1.0.0
-      graphql: ^16.0.0
-      graphql-subscriptions: ^3.0.0
-
-  '@scrumforge/backend-ext-ai@file:../../scrumforge-extensions/packages/backend-ext-ai':
-    resolution: {directory: ../../scrumforge-extensions/packages/backend-ext-ai, type: directory}
-    peerDependencies:
-      '@prisma/client': ^7.0.0
-      '@scrumforge/sdk': ^1.0.0
-      graphql: ^16.0.0
-      graphql-subscriptions: ^3.0.0
-
-  '@scrumforge/backend-ext-billing-stripe@file:../../scrumforge-extensions/packages/backend-ext-billing-stripe':
-    resolution: {directory: ../../scrumforge-extensions/packages/backend-ext-billing-stripe, type: directory}
-    peerDependencies:
-      '@prisma/client': ^7.0.0
-      '@scrumforge/sdk': ^1.0.0
-      graphql: ^16.0.0
-      graphql-subscriptions: ^3.0.0
-
-  '@scrumforge/backend-ext-integrations@file:../../scrumforge-extensions/packages/backend-ext-integrations':
-    resolution: {directory: ../../scrumforge-extensions/packages/backend-ext-integrations, type: directory}
-    peerDependencies:
-      '@prisma/client': ^7.0.0
-      '@scrumforge/sdk': ^1.0.0
-      graphql: ^16.0.0
-      graphql-subscriptions: ^3.0.0
-
-  '@scrumforge/backend-ext-planning-poker@file:../../scrumforge-extensions/packages/backend-ext-planning-poker':
-    resolution: {directory: ../../scrumforge-extensions/packages/backend-ext-planning-poker, type: directory}
-    peerDependencies:
-      '@prisma/client': ^7.0.0
-      '@scrumforge/sdk': ^1.0.0
-      graphql: ^16.0.0
-      graphql-subscriptions: ^3.0.0
-
-  '@scrumforge/backend-ext-retrospective-premium@file:../../scrumforge-extensions/packages/backend-ext-retrospective-premium':
-    resolution: {directory: ../../scrumforge-extensions/packages/backend-ext-retrospective-premium, type: directory}
-    peerDependencies:
-      '@prisma/client': ^7.0.0
-      '@scrumforge/sdk': ^1.0.0
-      graphql: ^16.0.0
-      graphql-subscriptions: ^3.0.0
-
-  '@scrumforge/backend-ext-wiki@file:../../scrumforge-extensions/packages/backend-ext-wiki':
-    resolution: {directory: ../../scrumforge-extensions/packages/backend-ext-wiki, type: directory}
-    peerDependencies:
-      '@prisma/client': ^7.0.0
-      '@scrumforge/sdk': ^1.0.0
-      graphql: ^16.0.0
-      graphql-subscriptions: ^3.0.0
-
-  '@scrumforge/backend-sdk@file:../packages/backend-sdk':
-    resolution: {directory: ../packages/backend-sdk, type: directory}
 
   '@sinclair/typebox@0.34.48':
     resolution: {integrity: sha512-kKJTNuK3AQOrgjjotVxMrCn1sUJwM76wMszfq1kdU4uYVJjvEWuFQ6HgvLt4Xz3fSmZlTOxJ/Ie13KnIcWQXFA==}
@@ -4147,63 +4061,6 @@ snapshots:
   '@redis/time-series@1.1.0(@redis/client@1.6.1)':
     dependencies:
       '@redis/client': 1.6.1
-
-  '@scrumforge/backend-ext-advanced-reports@file:../../scrumforge-extensions/packages/backend-ext-advanced-reports(@prisma/client@7.5.0(prisma@7.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3))(@scrumforge/backend-sdk@file:../packages/backend-sdk)(graphql-subscriptions@3.0.0(graphql@16.13.1))(graphql@16.13.1)':
-    dependencies:
-      '@prisma/client': 7.5.0(prisma@7.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3)
-      '@scrumforge/sdk': '@scrumforge/backend-sdk@file:../packages/backend-sdk'
-      graphql: 16.13.1
-      graphql-subscriptions: 3.0.0(graphql@16.13.1)
-
-  '@scrumforge/backend-ext-ai@file:../../scrumforge-extensions/packages/backend-ext-ai(@prisma/client@7.5.0(prisma@7.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3))(@scrumforge/backend-sdk@file:../packages/backend-sdk)(graphql-subscriptions@3.0.0(graphql@16.13.1))(graphql@16.13.1)':
-    dependencies:
-      '@anthropic-ai/sdk': 0.80.0
-      '@prisma/client': 7.5.0(prisma@7.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3)
-      '@scrumforge/sdk': '@scrumforge/backend-sdk@file:../packages/backend-sdk'
-      graphql: 16.13.1
-      graphql-subscriptions: 3.0.0(graphql@16.13.1)
-    transitivePeerDependencies:
-      - zod
-
-  '@scrumforge/backend-ext-billing-stripe@file:../../scrumforge-extensions/packages/backend-ext-billing-stripe(@prisma/client@7.5.0(prisma@7.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3))(@scrumforge/backend-sdk@file:../packages/backend-sdk)(@types/node@25.5.0)(graphql-subscriptions@3.0.0(graphql@16.13.1))(graphql@16.13.1)':
-    dependencies:
-      '@prisma/client': 7.5.0(prisma@7.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3)
-      '@scrumforge/sdk': '@scrumforge/backend-sdk@file:../packages/backend-sdk'
-      graphql: 16.13.1
-      graphql-subscriptions: 3.0.0(graphql@16.13.1)
-      stripe: 20.4.1(@types/node@25.5.0)
-    transitivePeerDependencies:
-      - '@types/node'
-
-  '@scrumforge/backend-ext-integrations@file:../../scrumforge-extensions/packages/backend-ext-integrations(@prisma/client@7.5.0(prisma@7.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3))(@scrumforge/backend-sdk@file:../packages/backend-sdk)(graphql-subscriptions@3.0.0(graphql@16.13.1))(graphql@16.13.1)':
-    dependencies:
-      '@prisma/client': 7.5.0(prisma@7.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3)
-      '@scrumforge/sdk': '@scrumforge/backend-sdk@file:../packages/backend-sdk'
-      graphql: 16.13.1
-      graphql-subscriptions: 3.0.0(graphql@16.13.1)
-
-  '@scrumforge/backend-ext-planning-poker@file:../../scrumforge-extensions/packages/backend-ext-planning-poker(@prisma/client@7.5.0(prisma@7.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3))(@scrumforge/backend-sdk@file:../packages/backend-sdk)(graphql-subscriptions@3.0.0(graphql@16.13.1))(graphql@16.13.1)':
-    dependencies:
-      '@prisma/client': 7.5.0(prisma@7.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3)
-      '@scrumforge/sdk': '@scrumforge/backend-sdk@file:../packages/backend-sdk'
-      graphql: 16.13.1
-      graphql-subscriptions: 3.0.0(graphql@16.13.1)
-
-  '@scrumforge/backend-ext-retrospective-premium@file:../../scrumforge-extensions/packages/backend-ext-retrospective-premium(@prisma/client@7.5.0(prisma@7.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3))(@scrumforge/backend-sdk@file:../packages/backend-sdk)(graphql-subscriptions@3.0.0(graphql@16.13.1))(graphql@16.13.1)':
-    dependencies:
-      '@prisma/client': 7.5.0(prisma@7.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3)
-      '@scrumforge/sdk': '@scrumforge/backend-sdk@file:../packages/backend-sdk'
-      graphql: 16.13.1
-      graphql-subscriptions: 3.0.0(graphql@16.13.1)
-
-  '@scrumforge/backend-ext-wiki@file:../../scrumforge-extensions/packages/backend-ext-wiki(@prisma/client@7.5.0(prisma@7.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3))(@scrumforge/backend-sdk@file:../packages/backend-sdk)(graphql-subscriptions@3.0.0(graphql@16.13.1))(graphql@16.13.1)':
-    dependencies:
-      '@prisma/client': 7.5.0(prisma@7.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3)
-      '@scrumforge/sdk': '@scrumforge/backend-sdk@file:../packages/backend-sdk'
-      graphql: 16.13.1
-      graphql-subscriptions: 3.0.0(graphql@16.13.1)
-
-  '@scrumforge/backend-sdk@file:../packages/backend-sdk': {}
 
   '@sinclair/typebox@0.34.48': {}
 
