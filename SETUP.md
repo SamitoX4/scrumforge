@@ -24,15 +24,17 @@
 | Herramienta | Versión mínima | Notas |
 |---|---|---|
 | Node.js | 22 | Requerido por el backend |
-| npm | 10 | Incluido con Node 22 |
+| pnpm | 9 | Gestor de paquetes usado en este proyecto |
 | Docker | 24 | Para PostgreSQL y Redis |
 | Docker Compose | v2 | Incluido con Docker Desktop |
 
 ```bash
 node --version    # v22.x.x
-npm --version     # 10.x.x
+pnpm --version    # 9.x.x  (instalar: npm install -g pnpm)
 docker --version  # Docker version 24.x.x
 ```
+
+> **¿Por qué pnpm?** Los lockfiles (`pnpm-lock.yaml`) commiteados garantizan instalaciones reproducibles. npm también funciona pero generará un `package-lock.json` diferente.
 
 ---
 
@@ -79,7 +81,19 @@ JWT_SECRET="pon-aqui-una-cadena-aleatoria-de-al-menos-32-caracteres"
 Instala dependencias, aplica migraciones y carga datos de demo:
 
 ```bash
-npm install
+pnpm install
+```
+
+> **pnpm bloquea postinstall scripts por seguridad.** Tras el primer `pnpm install` debes aprobar los scripts de Prisma y generar el cliente manualmente:
+>
+> ```bash
+> pnpm approve-builds          # selecciona @prisma/engines y prisma
+> pnpm install                 # reinstala ejecutando los scripts aprobados
+> # si el cliente aún no existe:
+> npx prisma generate --schema=src/config/db/schema.prisma
+> ```
+
+```bash
 npm run db:migrate
 npm run db:seed
 npm run dev
@@ -93,7 +107,7 @@ Abre una segunda terminal:
 ```bash
 cd frontend
 cp .env.example .env
-npm install
+pnpm install
 npm run dev
 # → App disponible en http://localhost:5173
 ```
@@ -281,9 +295,9 @@ ScrumForge usa una arquitectura **Open Core**:
 
 ### Cómo funciona
 
-**Backend:** al arrancar, lee `ENABLED_EXTENSIONS`, instala dinámicamente cada paquete `@scrumforge/backend-ext-<nombre>` desde `node_modules` y fusiona sus `typeDefs` y `resolvers` con el schema del core.
+**Backend:** al arrancar, lee `ENABLED_EXTENSIONS` y carga cada extensión habilitada. En el modo de desarrollo (y en despliegues self-hosted con el repo clonado), las extensiones se resuelven como módulos locales desde `backend/src/extensions/<nombre>/`. En despliegues que usen paquetes npm privados publicados, se resuelven desde `node_modules/@scrumforge/backend-ext-<nombre>`. En ambos casos el mecanismo es idéntico: los `typeDefs` y `resolvers` de cada extensión se fusionan con el schema del core antes de que Apollo Server arranque.
 
-**Frontend:** antes de montar React (`main.tsx`), `loadFrontendExtensions()` lee `VITE_ENABLED_EXTENSIONS` e importa dinámicamente cada paquete `@scrumforge/frontend-ext-<nombre>`. Cada extensión registra nav items, rutas y slots de UI.
+**Frontend:** antes de montar React (`main.tsx`), `loadFrontendExtensions()` lee `VITE_ENABLED_EXTENSIONS` e importa dinámicamente cada módulo de extensión. Cada extensión registra nav items, rutas y slots de UI.
 
 ---
 
