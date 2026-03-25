@@ -303,169 +303,76 @@ ScrumForge usa una arquitectura **Open Core**:
 
 ## 6. Instalar extensiones premium
 
-Las extensiones se distribuyen como paquetes privados en GitHub Packages bajo el scope `@scrumforge`.
+Las extensiones premium se distribuyen como paquetes descargables desde el portal de ScrumForge.
+Contacta a **raulbengalysamameascorbe@gmail.com** indicando qué extensiones necesitas y recibirás acceso a tu descarga.
 
-**Nomenclatura de paquetes:**
-- Backend: `@scrumforge/backend-ext-<nombre>`
-- Frontend: `@scrumforge/frontend-ext-<nombre>`
+### Cómo funciona
 
-### Paso previo — Solicitar acceso
+**Backend:** al arrancar, busca cada extensión habilitada en `backend/extensions/<nombre>/`. Si la carpeta existe y contiene un `dist/index.js` válido, carga sus `typeDefs` y `resolvers` en el schema de GraphQL.
 
-Antes de poder instalar cualquier extensión necesitas una **licencia comercial** y un token de acceso al registro privado. Escribe a **raulbengalysamameascorbe@gmail.com** indicando:
-
-- Las extensiones que necesitas (`planning-poker`, `ai`, `wiki`…)
-- Si es para desarrollo/evaluación o producción
-
-Una vez confirmada la licencia se te proporcionará el `GITHUB_TOKEN` necesario para el paso de autenticación que aparece a continuación.
+**Frontend:** Vite resuelve cada extensión desde `frontend/extensions/<nombre>/`. Si la carpeta existe, la incluye en el bundle. Si no existe, usa un stub vacío y la extensión no aparece en la UI.
 
 ---
 
-Hay dos formas de instalarlas según tu situación:
+### Opción A — Paquetes descargados del portal (clientes)
+
+#### 1. Descargar y descomprimir
+
+Descarga el ZIP de cada extensión adquirida y descomprímelo en las carpetas correspondientes:
+
+```
+scrumforge/
+├── backend/extensions/
+│   └── planning-poker/       ← backend de la extensión
+│       ├── dist/index.js      ← compilado listo para usar
+│       └── package.json
+└── frontend/extensions/
+    └── planning-poker/        ← frontend de la extensión
+        ├── index.ts
+        └── ...
+```
+
+#### 2. Activar en variables de entorno
+
+`backend/.env`:
+```env
+ENABLED_EXTENSIONS=planning-poker,wiki   # solo las que hayas instalado
+```
+
+`frontend/.env`:
+```env
+VITE_ENABLED_EXTENSIONS=planning-poker,wiki   # debe coincidir con ENABLED_EXTENSIONS
+```
+
+#### 3. Levantar
+
+```bash
+# Backend — reiniciar (detecta las extensiones al arrancar)
+cd backend && npm run dev
+
+# Frontend — reconstruir para incluir las extensiones en el bundle
+cd frontend && npm run build   # producción
+cd frontend && npm run dev     # o dev server
+```
 
 ---
 
-### Opción A — Desarrollo local con el repo privado clonado
+### Opción B — Desarrollo con el repo privado clonado
 
-Si tienes acceso al repositorio privado `scrumforge-extensions`, clónalo **junto** al repo público (misma carpeta padre):
+Si tienes acceso al repo `scrumforge-extensions`, clónalo junto a este repo:
 
 ```
 carpeta-de-trabajo/
-├── scrumforge/               ← repo público (este repo)
-└── scrumforge-extensions/    ← repo privado (extensiones)
+├── scrumforge/               ← este repo
+└── scrumforge-extensions/    ← repo privado
 ```
 
 ```bash
-git clone https://github.com/SamitoX4/scrumforge.git
 git clone https://github.com/SamitoX4/scrumforge-extensions.git
 ```
 
-#### Instalar extensiones del backend (referencias locales)
-
-```bash
-cd scrumforge/backend
-npm install \
-  file:../../scrumforge-extensions/packages/backend-ext-planning-poker \
-  file:../../scrumforge-extensions/packages/backend-ext-ai \
-  file:../../scrumforge-extensions/packages/backend-ext-integrations \
-  file:../../scrumforge-extensions/packages/backend-ext-advanced-reports \
-  file:../../scrumforge-extensions/packages/backend-ext-retrospective-premium \
-  file:../../scrumforge-extensions/packages/backend-ext-billing-stripe \
-  file:../../scrumforge-extensions/packages/backend-ext-wiki
-```
-
-> Las extensiones backend deben compilarse antes del primer `npm install`.
-> Desde `scrumforge-extensions/`, ejecuta una vez:
-> ```bash
-> for pkg in backend-ext-{planning-poker,ai,integrations,advanced-reports,retrospective-premium,billing-stripe,wiki}; do
->   (cd packages/$pkg && node ../../node_modules/.bin/tsup --no-dts)
-> done
-> ```
-
-#### Frontend — sin `npm install` (aliases automáticos)
-
-El frontend **no necesita `npm install`** para las extensiones. Cuando Vite detecta que `scrumforge-extensions/` existe junto al repo, activa automáticamente aliases que apuntan al código fuente de cada extensión.
-
-Solo activa las extensiones en `frontend/.env`:
-
-```env
-VITE_ENABLED_EXTENSIONS=planning-poker,ai,integrations,advanced-reports,retrospective-premium,billing-stripe,wiki
-```
-
-#### Activar extensiones del backend
-
-Edita `backend/.env`:
-
-```env
-ENABLED_EXTENSIONS=planning-poker,ai,integrations,advanced-reports,retrospective-premium,billing-stripe,wiki
-```
-
-Reinicia backend y frontend:
-
-```bash
-# Terminal 1
-cd scrumforge/backend && npm run dev
-
-# Terminal 2
-cd scrumforge/frontend && npm run dev
-```
-
----
-
-### Opción B — Producción con paquetes publicados en GitHub Packages
-
-#### 1. Autenticarse en el registro privado
-
-```bash
-# Opción A — login interactivo
-npm login --registry=https://npm.pkg.github.com --scope=@scrumforge
-
-# Opción B — token en ~/.npmrc (recomendado para CI/CD)
-echo "@scrumforge:registry=https://npm.pkg.github.com" >> ~/.npmrc
-echo "//npm.pkg.github.com/:_authToken=TU_GITHUB_TOKEN" >> ~/.npmrc
-```
-
-#### 2. Instalar extensiones del backend
-
-```bash
-cd backend
-npm install \
-  @scrumforge/backend-ext-planning-poker \
-  @scrumforge/backend-ext-ai \
-  @scrumforge/backend-ext-integrations \
-  @scrumforge/backend-ext-advanced-reports \
-  @scrumforge/backend-ext-retrospective-premium \
-  @scrumforge/backend-ext-billing-stripe \
-  @scrumforge/backend-ext-wiki
-```
-
-Activa en `backend/.env`:
-
-```env
-ENABLED_EXTENSIONS=planning-poker,ai,wiki   # solo las que hayas instalado
-```
-
-#### 3. Instalar extensiones del frontend
-
-```bash
-cd frontend
-npm install \
-  @scrumforge/frontend-ext-planning-poker \
-  @scrumforge/frontend-ext-ai \
-  @scrumforge/frontend-ext-integrations \
-  @scrumforge/frontend-ext-advanced-reports \
-  @scrumforge/frontend-ext-retrospective-premium \
-  @scrumforge/frontend-ext-billing-stripe \
-  @scrumforge/frontend-ext-wiki
-```
-
-Activa en `frontend/.env`:
-
-```env
-VITE_ENABLED_EXTENSIONS=planning-poker,ai,wiki   # debe coincidir con ENABLED_EXTENSIONS
-```
-
-> **Importante:** las variables `VITE_*` se hornean en el bundle en **build time**.
-> Después de instalar paquetes o cambiar `VITE_ENABLED_EXTENSIONS` debes reconstruir:
-> ```bash
-> npm run build   # producción
-> npm run dev     # o reiniciar el dev server
-> ```
-
-#### 4. Instalar en Docker (antes del build)
-
-```bash
-# Backend — instalar extensiones en backend/node_modules
-(cd backend && npm install @scrumforge/backend-ext-planning-poker @scrumforge/backend-ext-ai)
-
-# Frontend — instalar extensiones en frontend/node_modules
-(cd frontend && npm install @scrumforge/frontend-ext-planning-poker @scrumforge/frontend-ext-ai)
-
-# Construir imágenes (desde la raíz del repo)
-docker build -f backend/Dockerfile -t scrumforge-backend .
-docker build \
-  --build-arg VITE_ENABLED_EXTENSIONS=planning-poker,ai \
-  -f frontend/Dockerfile -t scrumforge-frontend .
-```
+Consulta `scrumforge-extensions/SETUP.md` para compilar y copiar las extensiones.
+En modo desarrollo con ambos repos al costado, Vite detecta los cambios en tiempo real sin necesidad de copiar.
 
 ---
 
