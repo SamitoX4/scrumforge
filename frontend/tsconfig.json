@@ -31,25 +31,39 @@
         "./node_modules/@types/react"
       ],
       "@scrumforge/frontend-ext-planning-poker": [
-        "../../scrumforge-extensions/packages/frontend-ext-planning-poker/src/index.ts"
+        "extensions/planning-poker/index.ts",
+        "../../scrumforge-extensions/packages/frontend-ext-planning-poker/src/index.ts",
+        "src/extensions/_stub.ts"
       ],
       "@scrumforge/frontend-ext-ai": [
-        "../../scrumforge-extensions/packages/frontend-ext-ai/src/index.ts"
+        "extensions/ai/index.ts",
+        "../../scrumforge-extensions/packages/frontend-ext-ai/src/index.ts",
+        "src/extensions/_stub.ts"
       ],
       "@scrumforge/frontend-ext-advanced-reports": [
-        "../../scrumforge-extensions/packages/frontend-ext-advanced-reports/src/index.ts"
+        "extensions/advanced-reports/index.ts",
+        "../../scrumforge-extensions/packages/frontend-ext-advanced-reports/src/index.ts",
+        "src/extensions/_stub.ts"
       ],
       "@scrumforge/frontend-ext-retrospective-premium": [
-        "../../scrumforge-extensions/packages/frontend-ext-retrospective-premium/src/index.ts"
+        "extensions/retrospective-premium/index.ts",
+        "../../scrumforge-extensions/packages/frontend-ext-retrospective-premium/src/index.ts",
+        "src/extensions/_stub.ts"
       ],
       "@scrumforge/frontend-ext-billing-stripe": [
-        "../../scrumforge-extensions/packages/frontend-ext-billing-stripe/src/index.ts"
+        "extensions/billing-stripe/index.ts",
+        "../../scrumforge-extensions/packages/frontend-ext-billing-stripe/src/index.ts",
+        "src/extensions/_stub.ts"
       ],
       "@scrumforge/frontend-ext-integrations": [
-        "../../scrumforge-extensions/packages/frontend-ext-integrations/src/index.ts"
+        "extensions/integrations/index.ts",
+        "../../scrumforge-extensions/packages/frontend-ext-integrations/src/index.ts",
+        "src/extensions/_stub.ts"
       ],
       "@scrumforge/frontend-ext-wiki": [
-        "../../scrumforge-extensions/packages/frontend-ext-wiki/src/index.ts"
+        "extensions/wiki/index.ts",
+        "../../scrumforge-extensions/packages/frontend-ext-wiki/src/index.ts",
+        "src/extensions/_stub.ts"
       ]
     },
     "types": []
