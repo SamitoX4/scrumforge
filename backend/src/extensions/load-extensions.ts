@@ -47,14 +47,14 @@ export async function loadExtensions(): Promise<void> {
  */
 const EXTENSION_MAP: Record<string, string> = {
   // Extensiones premium — el cliente coloca los paquetes compilados en backend/extensions/
-  // Ejemplo: descomprimir planning-poker.zip → backend/extensions/planning-poker/
-  'planning-poker':        'local:../../extensions/planning-poker',
-  'ai':                    'local:../../extensions/ai',
-  'integrations':          'local:../../extensions/integrations',
-  'advanced-reports':      'local:../../extensions/advanced-reports',
-  'retrospective-premium': 'local:../../extensions/retrospective-premium',
-  'wiki':                  'local:../../extensions/wiki',
-  'billing-stripe':        'local:../../extensions/billing-stripe',
+  // Ejemplo: copiar la carpeta backend-ext-planning-poker → backend/extensions/backend-ext-planning-poker/
+  'planning-poker':        'local:../../extensions/backend-ext-planning-poker',
+  'ai':                    'local:../../extensions/backend-ext-ai',
+  'integrations':          'local:../../extensions/backend-ext-integrations',
+  'advanced-reports':      'local:../../extensions/backend-ext-advanced-reports',
+  'retrospective-premium': 'local:../../extensions/backend-ext-retrospective-premium',
+  'wiki':                  'local:../../extensions/backend-ext-wiki',
+  'billing-stripe':        'local:../../extensions/backend-ext-billing-stripe',
 };
 
 async function loadExtension(name: string): Promise<void> {

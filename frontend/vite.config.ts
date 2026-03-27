@@ -16,7 +16,7 @@ function extAlias(name: string): Record<string, string> {
   const pkg  = `@scrumforge/frontend-ext-${name}`;
   const stub = path.resolve(__dirname, 'src/extensions/_stub.ts');
 
-  const customerPath = path.resolve(__dirname, `extensions/${name}/index.ts`);
+  const customerPath = path.resolve(__dirname, `extensions/frontend-ext-${name}/src/index.ts`);
   if (fs.existsSync(customerPath)) return { [pkg]: customerPath };
 
   const devPath = path.resolve(__dirname, `../../scrumforge-extensions/packages/frontend-ext-${name}/src/index.ts`);
@@ -55,9 +55,7 @@ export default defineConfig({
   },
   css: {
     preprocessorOptions: {
-      scss: {
-        api: 'modern',
-      },
+      scss: {},
     },
   },
 });

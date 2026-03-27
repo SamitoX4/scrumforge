@@ -31,37 +31,37 @@
         "./node_modules/@types/react"
       ],
       "@scrumforge/frontend-ext-planning-poker": [
-        "extensions/planning-poker/index.ts",
+        "extensions/frontend-ext-planning-poker/src/index.ts",
         "../../scrumforge-extensions/packages/frontend-ext-planning-poker/src/index.ts",
         "src/extensions/_stub.ts"
       ],
       "@scrumforge/frontend-ext-ai": [
-        "extensions/ai/index.ts",
+        "extensions/frontend-ext-ai/src/index.ts",
         "../../scrumforge-extensions/packages/frontend-ext-ai/src/index.ts",
         "src/extensions/_stub.ts"
       ],
       "@scrumforge/frontend-ext-advanced-reports": [
-        "extensions/advanced-reports/index.ts",
+        "extensions/frontend-ext-advanced-reports/src/index.ts",
         "../../scrumforge-extensions/packages/frontend-ext-advanced-reports/src/index.ts",
         "src/extensions/_stub.ts"
       ],
       "@scrumforge/frontend-ext-retrospective-premium": [
-        "extensions/retrospective-premium/index.ts",
+        "extensions/frontend-ext-retrospective-premium/src/index.ts",
         "../../scrumforge-extensions/packages/frontend-ext-retrospective-premium/src/index.ts",
         "src/extensions/_stub.ts"
       ],
       "@scrumforge/frontend-ext-billing-stripe": [
-        "extensions/billing-stripe/index.ts",
+        "extensions/frontend-ext-billing-stripe/src/index.ts",
         "../../scrumforge-extensions/packages/frontend-ext-billing-stripe/src/index.ts",
         "src/extensions/_stub.ts"
       ],
       "@scrumforge/frontend-ext-integrations": [
-        "extensions/integrations/index.ts",
+        "extensions/frontend-ext-integrations/src/index.ts",
         "../../scrumforge-extensions/packages/frontend-ext-integrations/src/index.ts",
         "src/extensions/_stub.ts"
       ],
       "@scrumforge/frontend-ext-wiki": [
-        "extensions/wiki/index.ts",
+        "extensions/frontend-ext-wiki/src/index.ts",
         "../../scrumforge-extensions/packages/frontend-ext-wiki/src/index.ts",
         "src/extensions/_stub.ts"
       ]
