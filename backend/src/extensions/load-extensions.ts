@@ -1,5 +1,10 @@
+import { existsSync, readFileSync } from 'fs';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { extensionRegistry } from './extension-registry';
 import { logger } from '../utils/logger';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /**
  * Lee la variable de entorno ENABLED_EXTENSIONS (CSV) y registra
@@ -68,10 +73,32 @@ async function loadExtension(name: string): Promise<void> {
   }
 
   const isLocal = location.startsWith('local:');
-  const importPath = isLocal ? location.slice('local:'.length) : location;
+  const rawPath = isLocal ? location.slice('local:'.length) : location;
+
+  let importPath: string;
+
+  if (isLocal) {
+    const absDir = resolve(__dirname, rawPath);
+
+    // Carpeta no instalada — omitir silenciosamente
+    if (!existsSync(absDir)) {
+      logger.debug(`[Extensions] '${name}' no está instalada (carpeta no encontrada), omitiendo.`);
+      return;
+    }
+
+    // En ESM, importar un directorio relativo NO lee el campo "main" de package.json.
+    // Leemos package.json manualmente para obtener el entry point real.
+    try {
+      const pkg = JSON.parse(readFileSync(resolve(absDir, 'package.json'), 'utf8')) as { main?: string };
+      importPath = resolve(absDir, pkg.main ?? 'dist/index.js');
+    } catch {
+      importPath = resolve(absDir, 'dist/index.js');
+    }
+  } else {
+    importPath = rawPath;
+  }
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const mod = await import(importPath);
     const extension = mod.default ?? mod[toCamelCase(name) + 'Extension'];
 
@@ -87,8 +114,7 @@ async function loadExtension(name: string): Promise<void> {
   } catch (err: unknown) {
     if (isModuleNotFound(err, importPath)) {
       if (isLocal) {
-        // Extension folder not present — silently skip (not installed)
-        logger.debug(`[Extensions] '${name}' no está instalada (carpeta no encontrada), omitiendo.`);
+        logger.debug(`[Extensions] '${name}' no está instalada (archivo no encontrado), omitiendo.`);
       } else {
         logger.warn(
           `[Extensions] El paquete '${importPath}' no está instalado. ` +
@@ -105,12 +131,8 @@ function toCamelCase(kebab: string): string {
   return kebab.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
 }
 
-function isModuleNotFound(err: unknown, packageName: string): boolean {
+function isModuleNotFound(err: unknown, importPath: string): boolean {
   if (!(err instanceof Error) || !('code' in err)) return false;
   if ((err as NodeJS.ErrnoException).code !== 'MODULE_NOT_FOUND') return false;
-  // Node resolves relative paths to absolute in the error message, so compare
-  // using the last path segment (e.g. 'backend-ext-planning-poker') which is
-  // present in both the relative and absolute forms.
-  const segment = packageName.split('/').pop() ?? packageName;
-  return err.message.includes(segment);
+  return err.message.includes(importPath);
 }
