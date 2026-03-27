@@ -1,10 +1,7 @@
 import { existsSync, readFileSync } from 'fs';
-import { resolve, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { resolve } from 'path';
 import { extensionRegistry } from './extension-registry';
 import { logger } from '../utils/logger';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /**
  * Lee la variable de entorno ENABLED_EXTENSIONS (CSV) y registra
