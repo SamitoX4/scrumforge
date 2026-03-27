@@ -23,6 +23,9 @@ importers:
       '@prisma/client':
         specifier: ^7.5.0
         version: 7.5.0(prisma@7.5.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3)
+      '@scrumforge/backend-sdk':
+        specifier: file:../packages/backend-sdk
+        version: file:../packages/backend-sdk
       bcryptjs:
         specifier: ^3.0.3
         version: 3.0.3
@@ -920,6 +923,9 @@ packages:
     resolution: {integrity: sha512-c1Q99M5ljsIuc4YdaCwfUEXsofakb9c8+Zse2qxTadu8TalLXuAESzLvFAvNVbkmSlvlzIQOLpBCmWI9wTOt+g==}
     peerDependencies:
       '@redis/client': ^1.0.0
+
+  '@scrumforge/backend-sdk@file:../packages/backend-sdk':
+    resolution: {directory: ../packages/backend-sdk, type: directory}
 
   '@sinclair/typebox@0.34.48':
     resolution: {integrity: sha512-kKJTNuK3AQOrgjjotVxMrCn1sUJwM76wMszfq1kdU4uYVJjvEWuFQ6HgvLt4Xz3fSmZlTOxJ/Ie13KnIcWQXFA==}
@@ -4061,6 +4067,8 @@ snapshots:
   '@redis/time-series@1.1.0(@redis/client@1.6.1)':
     dependencies:
       '@redis/client': 1.6.1
+
+  '@scrumforge/backend-sdk@file:../packages/backend-sdk': {}
 
   '@sinclair/typebox@0.34.48': {}
 
