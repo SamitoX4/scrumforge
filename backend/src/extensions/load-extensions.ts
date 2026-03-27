@@ -85,11 +85,16 @@ async function loadExtension(name: string): Promise<void> {
 
     extensionRegistry.register(extension);
   } catch (err: unknown) {
-    if (!isLocal && isModuleNotFound(err, importPath)) {
-      logger.warn(
-        `[Extensions] El paquete '${importPath}' no está instalado. ` +
-        `Instálalo con: npm install ${importPath}`,
-      );
+    if (isModuleNotFound(err, importPath)) {
+      if (isLocal) {
+        // Extension folder not present — silently skip (not installed)
+        logger.debug(`[Extensions] '${name}' no está instalada (carpeta no encontrada), omitiendo.`);
+      } else {
+        logger.warn(
+          `[Extensions] El paquete '${importPath}' no está instalado. ` +
+          `Instálalo con: npm install ${importPath}`,
+        );
+      }
     } else {
       logger.error({ err }, `[Extensions] Error al cargar '${importPath}'.`);
     }
