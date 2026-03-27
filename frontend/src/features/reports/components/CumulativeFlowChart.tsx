@@ -87,7 +87,6 @@ export function CumulativeFlowChart({ data }: CumulativeFlowChartProps) {
         <XAxis
           dataKey="date"
           tick={{ fontSize: 11, fill: '#94A3B8' }}
-          {/* Mostrar solo MM-DD para mayor legibilidad, omitiendo el año */}
           tickFormatter={(v: string) => v.slice(5)}
         />
         <YAxis tick={{ fontSize: 11, fill: '#94A3B8' }} />
