@@ -106,10 +106,11 @@ function toCamelCase(kebab: string): string {
 }
 
 function isModuleNotFound(err: unknown, packageName: string): boolean {
-  return (
-    err instanceof Error &&
-    'code' in err &&
-    (err as NodeJS.ErrnoException).code === 'MODULE_NOT_FOUND' &&
-    err.message.includes(packageName)
-  );
+  if (!(err instanceof Error) || !('code' in err)) return false;
+  if ((err as NodeJS.ErrnoException).code !== 'MODULE_NOT_FOUND') return false;
+  // Node resolves relative paths to absolute in the error message, so compare
+  // using the last path segment (e.g. 'backend-ext-planning-poker') which is
+  // present in both the relative and absolute forms.
+  const segment = packageName.split('/').pop() ?? packageName;
+  return err.message.includes(segment);
 }
