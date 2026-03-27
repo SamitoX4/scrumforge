@@ -17,6 +17,12 @@ importers:
       '@graphql-tools/merge':
         specifier: ^9.1.7
         version: 9.1.7(graphql@16.13.1)
+      '@graphql-tools/schema':
+        specifier: ^10.0.31
+        version: 10.0.31(graphql@16.13.1)
+      '@graphql-tools/utils':
+        specifier: ^11.0.0
+        version: 11.0.0(graphql@16.13.1)
       '@prisma/adapter-pg':
         specifier: ^7.5.0
         version: 7.5.0

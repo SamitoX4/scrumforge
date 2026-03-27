@@ -146,8 +146,8 @@ export async function createApp(schema: GraphQLSchema = executableSchema): Promi
   app.post('/webhooks/stripe', express.raw({ type: 'application/json' }), async (req, res) => {
     const sig = req.headers['stripe-signature'] as string;
     try {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const { BillingService } = require('../../extensions/billing-stripe/billing.service') as typeof import('../../extensions/billing-stripe/billing.service');
+      // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-explicit-any
+      const { BillingService } = require('../../extensions/billing-stripe/billing.service') as any;
       const billingService = new BillingService(prisma);
       await billingService.handleWebhook(req.body as Buffer, sig);
       res.json({ received: true });

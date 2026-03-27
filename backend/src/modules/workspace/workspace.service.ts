@@ -170,6 +170,7 @@ export class WorkspaceService {
     // Persistir auditoría ANTES de borrar — el registro sobrevive al CASCADE
     // porque la tabla `Event` no tiene FK al workspace ni al proyecto.
     // Non-fatal: un fallo en la auditoría nunca debe bloquear la eliminación.
+    if (!this.db) return false;
     const eventStore = new EventStore(this.db);
     eventStore
       .append({

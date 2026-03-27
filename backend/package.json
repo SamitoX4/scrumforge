@@ -25,6 +25,8 @@
     "@anthropic-ai/sdk": "^0.80.0",
     "@apollo/server": "^5.4.0",
     "@graphql-tools/merge": "^9.1.7",
+    "@graphql-tools/schema": "^10.0.31",
+    "@graphql-tools/utils": "^11.0.0",
     "@prisma/adapter-pg": "^7.5.0",
     "@prisma/client": "^7.5.0",
     "@scrumforge/backend-sdk": "file:../packages/backend-sdk",
